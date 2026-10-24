@@ -22,7 +22,7 @@ Ikuti langkah-langkah berikut untuk menjalankan keseluruhan sistem di komputer l
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/username-kamu/pajak-peta.git
+git clone https://github.com/Fardan07/pajak-peta.git
 cd pajak-peta
 ```
 
