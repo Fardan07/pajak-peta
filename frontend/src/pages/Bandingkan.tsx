@@ -26,6 +26,8 @@ import {
   calcUrgencyScore,
   evaluateCostPerKm,
   getCostPerKmBenchmark,
+  CATEGORY_META,
+  getProjectCategory,
   num,
   projects as defaultProjects,
   rupiahShort,
@@ -77,13 +79,10 @@ export default function Bandingkan({
   const urgencyDiff = Math.abs(urgA - urgB)
   const moreUrgent = urgA >= urgB ? 'A' : 'B'
 
-  // Extract raw damage metrics
-  const lubangA = pA.stats?.[1]?.value ?? '0'
-  const lubangB = pB.stats?.[1]?.value ?? '0'
-  const kecA = pA.stats?.[0]?.value ?? '0'
-  const kecB = pB.stats?.[0]?.value ?? '0'
-  const trafA = pA.stats?.[2]?.value ?? '0'
-  const trafB = pB.stats?.[2]?.value ?? '0'
+  const catA = pA.category ?? getProjectCategory(pA.name)
+  const catB = pB.category ?? getProjectCategory(pB.name)
+  const metaA = CATEGORY_META[catA]
+  const metaB = CATEGORY_META[catB]
 
   return (
     <div className="scroll-quiet min-h-0 flex-1 overflow-y-auto bg-canvas">
@@ -354,48 +353,50 @@ export default function Bandingkan({
             </div>
           </div>
 
-          {/* Section 3: Statistik Kerusakan & Kondisi Riil */}
+          {/* Section 3: Indikator Lapangan & Statistik Kebutuhan Warga */}
           <div className="rounded-2xl border border-line bg-surface p-5 shadow-card md:p-7">
             <div className="flex items-center gap-2 mb-5">
               <span className="flex size-6 items-center justify-center rounded-full bg-canvas border border-line text-xs font-bold text-ink">
                 3
               </span>
               <h2 className="text-sm font-bold uppercase tracking-wider text-ink">
-                Kondisi Riil: Kerusakan, Kecelakaan, &amp; Volume Lalu Lintas
+                Kondisi Lapangan &amp; Justifikasi Prioritas Pembangunan
               </h2>
             </div>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-line">
               {/* Kolom A */}
               <div className="space-y-3.5 md:pr-6">
-                <div className="flex items-center justify-between rounded-xl bg-canvas p-3 border border-line">
-                  <span className="text-xs font-semibold text-sub">Titik Kerusakan / Lubang</span>
-                  <span className="text-base font-extrabold text-ink">{lubangA} titik</span>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-brand uppercase tracking-wider truncate mr-2">Indikator: {pA.name}</span>
+                  <span className="inline-flex items-center gap-1 shrink-0 rounded-full bg-brand/10 text-brand px-2 py-0.5 text-[11px] font-bold">
+                    <span>{metaA.icon}</span>
+                    <span>{metaA.label}</span>
+                  </span>
                 </div>
-                <div className="flex items-center justify-between rounded-xl bg-canvas p-3 border border-line">
-                  <span className="text-xs font-semibold text-sub">Kecelakaan Lalu Lintas</span>
-                  <span className="text-base font-extrabold text-bad">{kecA} kasus/tahun</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl bg-canvas p-3 border border-line">
-                  <span className="text-xs font-semibold text-sub">Kepadatan Lalu Lintas</span>
-                  <span className="text-base font-extrabold text-ink">{trafA} kendaraan/hari</span>
-                </div>
+                {pA.stats?.map((s, idx) => (
+                  <div key={idx} className="flex items-center justify-between rounded-xl bg-canvas p-3 border border-line">
+                    <span className="text-xs font-semibold text-sub">{s.label}</span>
+                    <span className={cx("text-base font-extrabold", idx === 0 ? "text-bad" : "text-ink")}>{s.value}</span>
+                  </div>
+                ))}
               </div>
 
               {/* Kolom B */}
               <div className="space-y-3.5 pt-6 md:pt-0 md:pl-6">
-                <div className="flex items-center justify-between rounded-xl bg-canvas p-3 border border-line">
-                  <span className="text-xs font-semibold text-sub">Titik Kerusakan / Lubang</span>
-                  <span className="text-base font-extrabold text-ink">{lubangB} titik</span>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-[#A22920] uppercase tracking-wider truncate mr-2">Indikator: {pB.name}</span>
+                  <span className="inline-flex items-center gap-1 shrink-0 rounded-full bg-[#A22920]/10 text-[#A22920] px-2 py-0.5 text-[11px] font-bold">
+                    <span>{metaB.icon}</span>
+                    <span>{metaB.label}</span>
+                  </span>
                 </div>
-                <div className="flex items-center justify-between rounded-xl bg-canvas p-3 border border-line">
-                  <span className="text-xs font-semibold text-sub">Kecelakaan Lalu Lintas</span>
-                  <span className="text-base font-extrabold text-bad">{kecB} kasus/tahun</span>
-                </div>
-                <div className="flex items-center justify-between rounded-xl bg-canvas p-3 border border-line">
-                  <span className="text-xs font-semibold text-sub">Kepadatan Lalu Lintas</span>
-                  <span className="text-base font-extrabold text-ink">{trafB} kendaraan/hari</span>
-                </div>
+                {pB.stats?.map((s, idx) => (
+                  <div key={idx} className="flex items-center justify-between rounded-xl bg-canvas p-3 border border-line">
+                    <span className="text-xs font-semibold text-sub">{s.label}</span>
+                    <span className={cx("text-base font-extrabold", idx === 0 ? "text-bad" : "text-ink")}>{s.value}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

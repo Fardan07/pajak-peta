@@ -66,6 +66,7 @@ export default function GoogleMapLayer({
   mapType,
   onError,
   showBoundaries = true,
+  projects: allProjects = projects,
 }: {
   apiKey: string
   list: Project[]
@@ -74,6 +75,7 @@ export default function GoogleMapLayer({
   mapType: 'roadmap' | 'hybrid'
   onError: (m: string) => void
   showBoundaries?: boolean
+  projects?: Project[]
 }) {
   const host = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<any>(null)
@@ -99,7 +101,7 @@ export default function GoogleMapLayer({
         zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_CENTER },
       })
       const b = new google.maps.LatLngBounds()
-      projects.forEach((p) => b.extend({ lat: p.lat, lng: p.lng }))
+      allProjects.forEach((p) => b.extend({ lat: p.lat, lng: p.lng }))
       m.fitBounds(b, 48)
       m.addListener('zoom_changed', () => setZoom(m.getZoom()))
       m.addListener('click', () => selectRef.current(null))
@@ -156,11 +158,11 @@ export default function GoogleMapLayer({
   }, [map, showBoundaries])
 
   useEffect(() => {
-    const p = projects.find((x) => x.id === selectedId)
+    const p = allProjects.find((x) => x.id === selectedId)
     if (!map || !p) return
     const t = setTimeout(() => map.panTo({ lat: p.lat, lng: p.lng }), 260)
     return () => clearTimeout(t)
-  }, [map, selectedId])
+  }, [map, selectedId, allProjects])
 
   const groups = useMemo<Group[]>(() => {
     const thr = (44 * 360) / (256 * Math.pow(2, zoom))

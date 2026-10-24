@@ -5,6 +5,7 @@ module.exports = [
     "id": "p1",
     "name": "Perbaikan Jalan Raya Gedangan Segmen 2",
     "loc": "Kec. Gedangan, Sidoarjo",
+    "category": "jalan",
     "status": "tepat",
     "cek": false,
     "progress": 68,
@@ -18,8 +19,8 @@ module.exports = [
     "x": 47,
     "y": 50,
     "km": 2.4,
-    "lat": -7.385,
-    "lng": 112.7234,
+    "lat": -7.382,
+    "lng": 112.7245,
     "reports": [
       {
         "id": "r1",
@@ -89,6 +90,7 @@ module.exports = [
     "id": "p2",
     "name": "Perbaikan Jalan Raya Gedangan Segmen 1",
     "loc": "Kec. Gedangan, Sidoarjo",
+    "category": "jalan",
     "status": "tepat",
     "cek": false,
     "progress": 100,
@@ -102,8 +104,8 @@ module.exports = [
     "x": 43,
     "y": 54,
     "km": 1.9,
-    "lat": -7.3918,
-    "lng": 112.7146,
+    "lat": -7.3715,
+    "lng": 112.7265,
     "reports": [],
     "stats": [
       {
@@ -154,6 +156,7 @@ module.exports = [
     "id": "p3",
     "name": "Normalisasi Drainase Jl. Raya Gedangan",
     "loc": "Kec. Gedangan, Sidoarjo",
+    "category": "drainase",
     "status": "tepat",
     "cek": false,
     "progress": 54,
@@ -167,50 +170,50 @@ module.exports = [
     "x": 51,
     "y": 55,
     "km": 1.2,
-    "lat": -7.3934999999999995,
-    "lng": 112.7322,
+    "lat": -7.3895,
+    "lng": 112.7228,
     "reports": [],
     "stats": [
       {
-        "value": "29",
-        "label": "kecelakaan / tahun",
+        "value": "14",
+        "label": "kejadian genangan / tahun",
         "data": [
-          41,
-          53,
-          52,
-          59,
-          59,
-          54,
-          67,
-          59
+          17,
+          18,
+          22,
+          22,
+          23,
+          24,
+          25,
+          26
         ]
       },
       {
-        "value": "179",
-        "label": "titik lubang",
+        "value": "37 cm",
+        "label": "rata-rata tinggi genangan",
         "data": [
-          39,
-          51,
-          46,
-          49,
-          59,
-          65,
-          64,
-          72
+          27,
+          24,
+          26,
+          30,
+          38,
+          35,
+          33,
+          39
         ]
       },
       {
-        "value": "6.715",
-        "label": "kendaraan / hari",
+        "value": "1.443",
+        "label": "warga terdampak banjir",
         "data": [
-          50,
-          48,
-          54,
-          51,
-          59,
-          53,
-          67,
-          71
+          5000,
+          4800,
+          5400,
+          5100,
+          5900,
+          5300,
+          6700,
+          7100
         ]
       }
     ]
@@ -219,6 +222,7 @@ module.exports = [
     "id": "p4",
     "name": "Penggantian Jembatan Kali Buntung",
     "loc": "Kec. Waru, Sidoarjo",
+    "category": "jembatan",
     "status": "dekat",
     "cek": false,
     "progress": 71,
@@ -232,50 +236,50 @@ module.exports = [
     "x": 28,
     "y": 38,
     "km": 0.1,
-    "lat": -7.364599999999999,
-    "lng": 112.6816,
+    "lat": -7.3525,
+    "lng": 112.7285,
     "reports": [],
     "stats": [
       {
-        "value": "27",
-        "label": "kecelakaan / tahun",
+        "value": "26.682",
+        "label": "kendaraan melintas / hari",
         "data": [
-          47,
-          46,
-          53,
-          53,
-          48,
-          61,
-          53,
-          59
-        ]
-      },
-      {
-        "value": "68",
-        "label": "titik lubang",
-        "data": [
-          45,
-          40,
-          43,
-          53,
-          59,
-          58,
-          66,
-          67
-        ]
-      },
-      {
-        "value": "6.454",
-        "label": "kendaraan / hari",
-        "data": [
+          38,
+          37,
           42,
-          48,
-          45,
-          53,
-          47,
-          61,
-          65,
-          57
+          42,
+          38,
+          49,
+          42,
+          47
+        ]
+      },
+      {
+        "value": "31",
+        "label": "titik retak & deformasi",
+        "data": [
+          23,
+          20,
+          22,
+          27,
+          30,
+          29,
+          33,
+          34
+        ]
+      },
+      {
+        "value": "37 tahun",
+        "label": "usia struktur jembatan",
+        "data": [
+          24,
+          25,
+          31,
+          32,
+          32,
+          34,
+          35,
+          33
         ]
       }
     ]
@@ -284,6 +288,7 @@ module.exports = [
     "id": "p5",
     "name": "Rehabilitasi Jl. Waru–Aloha",
     "loc": "Kec. Waru, Sidoarjo",
+    "category": "jalan",
     "status": "tepat",
     "cek": false,
     "progress": 83,
@@ -297,8 +302,8 @@ module.exports = [
     "x": 32,
     "y": 34,
     "km": 3.1,
-    "lat": -7.3578,
-    "lng": 112.69040000000001,
+    "lat": -7.3625,
+    "lng": 112.727,
     "reports": [],
     "stats": [
       {
@@ -349,6 +354,7 @@ module.exports = [
     "id": "p6",
     "name": "Pelebaran Jl. Brigjen Katamso",
     "loc": "Kec. Waru, Sidoarjo",
+    "category": "jalan",
     "status": "telat",
     "cek": true,
     "progress": 41,
@@ -362,8 +368,8 @@ module.exports = [
     "x": 24,
     "y": 43,
     "km": 2.8,
-    "lat": -7.3731,
-    "lng": 112.67280000000001,
+    "lat": -7.3565,
+    "lng": 112.744,
     "reports": [
       {
         "id": "r4",
@@ -433,6 +439,7 @@ module.exports = [
     "id": "p7",
     "name": "Pembangunan Trotoar Jl. Ahmad Yani",
     "loc": "Kec. Sidoarjo, Sidoarjo",
+    "category": "bangunan",
     "status": "tepat",
     "cek": false,
     "progress": 59,
@@ -446,50 +453,50 @@ module.exports = [
     "x": 62,
     "y": 62,
     "km": 1.5,
-    "lat": -7.4054,
-    "lng": 112.7564,
+    "lat": -7.4435,
+    "lng": 112.716,
     "reports": [],
     "stats": [
       {
-        "value": "37",
-        "label": "kecelakaan / tahun",
+        "value": "6.400",
+        "label": "pengunjung pasar / hari",
         "data": [
-          53,
-          48,
-          61,
-          53,
-          59,
-          68,
-          70,
-          66
-        ]
-      },
-      {
-        "value": "274",
-        "label": "titik lubang",
-        "data": [
-          53,
-          59,
+          50,
+          52,
+          55,
           58,
-          66,
-          67,
-          65,
-          74,
-          71
+          60,
+          61,
+          63,
+          64
         ]
       },
       {
-        "value": "11.196",
-        "label": "kendaraan / hari",
+        "value": "74",
+        "label": "kios bocor & rusak",
         "data": [
-          53,
+          32,
+          38,
+          44,
+          52,
+          58,
+          64,
+          70,
+          74
+        ]
+      },
+      {
+        "value": "490",
+        "label": "pedagang aktif UMKM",
+        "data": [
+          45,
+          46,
+          46,
           47,
-          61,
-          65,
-          57,
-          71,
-          62,
-          71
+          48,
+          48,
+          49,
+          49
         ]
       }
     ]
@@ -498,6 +505,7 @@ module.exports = [
     "id": "p8",
     "name": "Revitalisasi Alun-alun Sidoarjo",
     "loc": "Kec. Sidoarjo, Sidoarjo",
+    "category": "bangunan",
     "status": "tepat",
     "cek": false,
     "progress": 37,
@@ -511,50 +519,50 @@ module.exports = [
     "x": 67,
     "y": 66,
     "km": 0.4,
-    "lat": -7.4121999999999995,
-    "lng": 112.76740000000001,
+    "lat": -7.4478,
+    "lng": 112.7176,
     "reports": [],
     "stats": [
       {
-        "value": "37",
-        "label": "kecelakaan / tahun",
+        "value": "5.800",
+        "label": "pengunjung / hari",
         "data": [
-          37,
-          50,
-          42,
-          48,
-          57,
-          59,
-          55,
-          57
-        ]
-      },
-      {
-        "value": "154",
-        "label": "titik lubang",
-        "data": [
-          48,
+          38,
+          41,
+          44,
           47,
+          50,
+          52,
           55,
-          56,
-          54,
-          63,
-          60,
-          60
+          58
         ]
       },
       {
-        "value": "8.854",
-        "label": "kendaraan / hari",
+        "value": "48",
+        "label": "kerusakan fasilitas",
         "data": [
-          36,
-          50,
-          54,
-          46,
+          18,
+          22,
+          26,
+          31,
+          35,
+          40,
+          44,
+          48
+        ]
+      },
+      {
+        "value": "92",
+        "label": "keluhan warga / bulan",
+        "data": [
+          45,
+          52,
           60,
-          51,
-          60,
-          69
+          68,
+          74,
+          81,
+          88,
+          92
         ]
       }
     ]
@@ -562,7 +570,8 @@ module.exports = [
   {
     "id": "p9",
     "name": "Normalisasi Saluran Bulang",
-    "loc": "Kec. Sidoarjo, Sidoarjo",
+    "loc": "Kec. Prambon, Sidoarjo",
+    "category": "drainase",
     "status": "tepat",
     "cek": false,
     "progress": 64,
@@ -576,50 +585,50 @@ module.exports = [
     "x": 59,
     "y": 71,
     "km": 2,
-    "lat": -7.4207,
-    "lng": 112.74980000000001,
+    "lat": -7.4725,
+    "lng": 112.5685,
     "reports": [],
     "stats": [
       {
-        "value": "37",
-        "label": "kecelakaan / tahun",
+        "value": "13",
+        "label": "kejadian genangan / tahun",
         "data": [
-          48,
-          40,
-          46,
-          55,
-          57,
-          53,
-          55,
-          60
+          18,
+          19,
+          19,
+          23,
+          24,
+          22,
+          26,
+          26
         ]
       },
       {
-        "value": "61",
-        "label": "titik lubang",
+        "value": "43 cm",
+        "label": "rata-rata tinggi genangan",
         "data": [
-          45,
-          53,
-          54,
-          52,
-          61,
-          58,
-          58,
-          67
+          22,
+          28,
+          30,
+          33,
+          34,
+          31,
+          36,
+          37
         ]
       },
       {
-        "value": "19.394",
-        "label": "kendaraan / hari",
+        "value": "2.204",
+        "label": "warga terdampak banjir",
         "data": [
-          48,
-          52,
-          44,
-          58,
-          49,
-          58,
-          67,
-          65
+          4800,
+          5200,
+          4400,
+          5800,
+          4900,
+          5800,
+          6700,
+          6500
         ]
       }
     ]
@@ -628,6 +637,7 @@ module.exports = [
     "id": "p10",
     "name": "Pembangunan Jl. Lingkar Timur",
     "loc": "Kec. Sidoarjo, Sidoarjo",
+    "category": "bangunan",
     "status": "dekat",
     "cek": false,
     "progress": 77,
@@ -641,50 +651,50 @@ module.exports = [
     "x": 73,
     "y": 58,
     "km": 4.6,
-    "lat": -7.3986,
-    "lng": 112.7806,
+    "lat": -7.4385,
+    "lng": 112.742,
     "reports": [],
     "stats": [
       {
-        "value": "37",
-        "label": "kecelakaan / tahun",
+        "value": "6.400",
+        "label": "pengunjung pasar / hari",
         "data": [
-          37,
-          43,
-          52,
-          54,
           50,
           52,
-          57,
+          55,
+          58,
+          60,
+          61,
+          63,
           64
         ]
       },
       {
-        "value": "170",
-        "label": "titik lubang",
+        "value": "74",
+        "label": "kios bocor & rusak",
         "data": [
-          50,
-          51,
-          49,
+          32,
+          38,
+          44,
+          52,
           58,
-          55,
-          55,
           64,
-          65
+          70,
+          74
         ]
       },
       {
-        "value": "14.341",
-        "label": "kendaraan / hari",
+        "value": "490",
+        "label": "pedagang aktif UMKM",
         "data": [
-          49,
-          41,
-          55,
+          45,
           46,
-          55,
-          64,
-          62,
-          67
+          46,
+          47,
+          48,
+          48,
+          49,
+          49
         ]
       }
     ]
@@ -693,6 +703,7 @@ module.exports = [
     "id": "p11",
     "name": "Peningkatan Jl. Buduran–Sedati",
     "loc": "Kec. Buduran, Sidoarjo",
+    "category": "jalan",
     "status": "tepat",
     "cek": false,
     "progress": 48,
@@ -706,8 +717,8 @@ module.exports = [
     "x": 78,
     "y": 42,
     "km": 3.8,
-    "lat": -7.3713999999999995,
-    "lng": 112.7916,
+    "lat": -7.398,
+    "lng": 112.755,
     "reports": [],
     "stats": [
       {
@@ -758,6 +769,7 @@ module.exports = [
     "id": "p12",
     "name": "Rekonstruksi Jembatan Kali Porong",
     "loc": "Kec. Porong, Sidoarjo",
+    "category": "jembatan",
     "status": "telat",
     "cek": false,
     "progress": 52,
@@ -771,50 +783,50 @@ module.exports = [
     "x": 84,
     "y": 77,
     "km": 0.3,
-    "lat": -7.430899999999999,
-    "lng": 112.8048,
+    "lat": -7.542,
+    "lng": 112.6985,
     "reports": [],
     "stats": [
       {
-        "value": "51",
-        "label": "kecelakaan / tahun",
+        "value": "31.328",
+        "label": "kendaraan melintas / hari",
         "data": [
+          38,
+          40,
+          37,
+          38,
+          42,
           48,
           50,
-          46,
-          48,
-          53,
-          60,
-          62,
-          61
+          49
         ]
       },
       {
-        "value": "222",
-        "label": "titik lubang",
+        "value": "39",
+        "label": "titik retak & deformasi",
         "data": [
-          45,
-          54,
-          51,
-          51,
-          60,
-          61,
-          63,
-          60
+          23,
+          27,
+          26,
+          26,
+          30,
+          31,
+          32,
+          30
         ]
       },
       {
-        "value": "22.885",
-        "label": "kendaraan / hari",
+        "value": "35 tahun",
+        "label": "usia struktur jembatan",
         "data": [
-          51,
-          42,
-          51,
-          60,
-          58,
-          63,
-          68,
-          69
+          28,
+          30,
+          30,
+          35,
+          33,
+          35,
+          35,
+          44
         ]
       }
     ]
@@ -823,6 +835,7 @@ module.exports = [
     "id": "p13",
     "name": "Peningkatan Jl. Krian–Balongbendo",
     "loc": "Kec. Krian, Sidoarjo",
+    "category": "jalan",
     "status": "tepat",
     "cek": false,
     "progress": 73,
@@ -836,8 +849,8 @@ module.exports = [
     "x": 20,
     "y": 70,
     "km": 5.2,
-    "lat": -7.419,
-    "lng": 112.664,
+    "lat": -7.408,
+    "lng": 112.552,
     "reports": [],
     "stats": [
       {
@@ -888,6 +901,7 @@ module.exports = [
     "id": "p14",
     "name": "Drainase Perumahan Krian Kota",
     "loc": "Kec. Krian, Sidoarjo",
+    "category": "drainase",
     "status": "tepat",
     "cek": false,
     "progress": 90,
@@ -901,50 +915,50 @@ module.exports = [
     "x": 16,
     "y": 66,
     "km": 0.9,
-    "lat": -7.4121999999999995,
-    "lng": 112.65520000000001,
+    "lat": -7.4125,
+    "lng": 112.583,
     "reports": [],
     "stats": [
       {
-        "value": "22",
-        "label": "kecelakaan / tahun",
+        "value": "18",
+        "label": "kejadian genangan / tahun",
         "data": [
-          34,
-          36,
-          41,
-          48,
-          50,
-          49,
-          50,
-          55
+          14,
+          18,
+          19,
+          22,
+          20,
+          24,
+          23,
+          24
         ]
       },
       {
-        "value": "64",
-        "label": "titik lubang",
+        "value": "48 cm",
+        "label": "rata-rata tinggi genangan",
         "data": [
-          39,
-          39,
-          48,
-          49,
-          51,
-          48,
-          63,
-          66
+          19,
+          25,
+          26,
+          26,
+          31,
+          31,
+          38,
+          38
         ]
       },
       {
-        "value": "23.574",
-        "label": "kendaraan / hari",
+        "value": "2.454",
+        "label": "warga terdampak banjir",
         "data": [
-          39,
-          48,
-          46,
-          51,
-          56,
-          57,
-          64,
-          56
+          3900,
+          4800,
+          4600,
+          5100,
+          5600,
+          5700,
+          6400,
+          5600
         ]
       }
     ]
@@ -953,6 +967,7 @@ module.exports = [
     "id": "p15",
     "name": "Rehabilitasi Pasar Krian",
     "loc": "Kec. Krian, Sidoarjo",
+    "category": "bangunan",
     "status": "tepat",
     "cek": false,
     "progress": 66,
@@ -966,50 +981,50 @@ module.exports = [
     "x": 12,
     "y": 75,
     "km": 0.2,
-    "lat": -7.4275,
-    "lng": 112.6464,
+    "lat": -7.414,
+    "lng": 112.5805,
     "reports": [],
     "stats": [
       {
-        "value": "44",
-        "label": "kecelakaan / tahun",
+        "value": "6.400",
+        "label": "pengunjung pasar / hari",
         "data": [
+          50,
+          52,
+          55,
+          58,
+          60,
+          61,
+          63,
+          64
+        ]
+      },
+      {
+        "value": "74",
+        "label": "kios bocor & rusak",
+        "data": [
+          32,
+          38,
+          44,
+          52,
+          58,
+          64,
+          70,
+          74
+        ]
+      },
+      {
+        "value": "490",
+        "label": "pedagang aktif UMKM",
+        "data": [
+          45,
           46,
-          51,
-          58,
-          60,
-          59,
-          60,
-          65,
-          75
-        ]
-      },
-      {
-        "value": "153",
-        "label": "titik lubang",
-        "data": [
+          46,
+          47,
+          48,
+          48,
           49,
-          58,
-          59,
-          61,
-          58,
-          73,
-          76,
-          75
-        ]
-      },
-      {
-        "value": "15.833",
-        "label": "kendaraan / hari",
-        "data": [
-          58,
-          56,
-          61,
-          66,
-          67,
-          74,
-          66,
-          75
+          49
         ]
       }
     ]
@@ -1018,6 +1033,7 @@ module.exports = [
     "id": "p16",
     "name": "Penerangan Jalan Umum Jl. Raya Taman",
     "loc": "Kec. Taman, Sidoarjo",
+    "category": "pju",
     "status": "tepat",
     "cek": false,
     "progress": 80,
@@ -1031,50 +1047,50 @@ module.exports = [
     "x": 36,
     "y": 26,
     "km": 4,
-    "lat": -7.3442,
-    "lng": 112.6992,
+    "lat": -7.348,
+    "lng": 112.689,
     "reports": [],
     "stats": [
       {
-        "value": "41",
-        "label": "kecelakaan / tahun",
+        "value": "60",
+        "label": "titik lampu mati / gelap",
         "data": [
-          33,
-          40,
-          42,
-          41,
-          42,
-          47,
-          57,
-          62
+          28,
+          29,
+          34,
+          35,
+          44,
+          45,
+          43,
+          51
         ]
       },
       {
-        "value": "137",
-        "label": "titik lubang",
+        "value": "19",
+        "label": "kerawanan malam / tahun",
         "data": [
-          40,
-          41,
-          43,
-          40,
-          55,
-          58,
-          57,
-          62
+          12,
+          14,
+          13,
+          16,
+          15,
+          16,
+          17,
+          16
         ]
       },
       {
-        "value": "22.711",
-        "label": "kendaraan / hari",
+        "value": "11.342",
+        "label": "pengendara malam / hari",
         "data": [
-          38,
-          43,
-          48,
-          49,
-          56,
-          48,
-          57,
-          53
+          23,
+          26,
+          29,
+          29,
+          34,
+          29,
+          34,
+          32
         ]
       }
     ]
@@ -1083,6 +1099,7 @@ module.exports = [
     "id": "p17",
     "name": "Pengaspalan Jl. Tropodo–Trosobo",
     "loc": "Kec. Taman, Sidoarjo",
+    "category": "jalan",
     "status": "tepat",
     "cek": false,
     "progress": 58,
@@ -1096,8 +1113,8 @@ module.exports = [
     "x": 41,
     "y": 31,
     "km": 3.3,
-    "lat": -7.3527,
-    "lng": 112.7102,
+    "lat": -7.3685,
+    "lng": 112.642,
     "reports": [],
     "stats": [
       {
@@ -1148,6 +1165,7 @@ module.exports = [
     "id": "p18",
     "name": "Perbaikan Jl. Raya Sepanjang",
     "loc": "Kec. Taman, Sidoarjo",
+    "category": "jalan",
     "status": "dekat",
     "cek": true,
     "progress": 69,
@@ -1161,8 +1179,8 @@ module.exports = [
     "x": 38,
     "y": 46,
     "km": 2.2,
-    "lat": -7.3782,
-    "lng": 112.70360000000001,
+    "lat": -7.3465,
+    "lng": 112.6985,
     "reports": [
       {
         "id": "r7",
@@ -1226,6 +1244,7 @@ module.exports = [
     "id": "p19",
     "name": "Pembangunan Embung Wonoayu",
     "loc": "Kec. Wonoayu, Sidoarjo",
+    "category": "bangunan",
     "status": "tepat",
     "cek": false,
     "progress": 44,
@@ -1239,50 +1258,50 @@ module.exports = [
     "x": 24,
     "y": 59,
     "km": 0.5,
-    "lat": -7.4003,
-    "lng": 112.67280000000001,
+    "lat": -7.426,
+    "lng": 112.632,
     "reports": [],
     "stats": [
       {
-        "value": "51",
-        "label": "kecelakaan / tahun",
+        "value": "6.400",
+        "label": "pengunjung pasar / hari",
         "data": [
+          50,
           52,
-          53,
+          55,
           58,
-          68,
-          73,
-          68,
-          70,
-          72
-        ]
-      },
-      {
-        "value": "133",
-        "label": "titik lubang",
-        "data": [
-          51,
-          66,
-          69,
-          68,
-          73,
-          74,
-          79,
-          82
-        ]
-      },
-      {
-        "value": "19.617",
-        "label": "kendaraan / hari",
-        "data": [
           60,
-          67,
-          59,
-          68,
+          61,
+          63,
+          64
+        ]
+      },
+      {
+        "value": "74",
+        "label": "kios bocor & rusak",
+        "data": [
+          32,
+          38,
+          44,
+          52,
+          58,
           64,
-          66,
-          77,
-          82
+          70,
+          74
+        ]
+      },
+      {
+        "value": "490",
+        "label": "pedagang aktif UMKM",
+        "data": [
+          45,
+          46,
+          46,
+          47,
+          48,
+          48,
+          49,
+          49
         ]
       }
     ]
@@ -1291,6 +1310,7 @@ module.exports = [
     "id": "p20",
     "name": "Peningkatan Jl. Candi–Tulangan",
     "loc": "Kec. Candi, Sidoarjo",
+    "category": "jalan",
     "status": "tepat",
     "cek": false,
     "progress": 62,
@@ -1304,8 +1324,8 @@ module.exports = [
     "x": 56,
     "y": 81,
     "km": 3,
-    "lat": -7.4376999999999995,
-    "lng": 112.7432,
+    "lat": -7.471,
+    "lng": 112.686,
     "reports": [],
     "stats": [
       {
@@ -1356,6 +1376,7 @@ module.exports = [
     "id": "p21",
     "name": "Rehabilitasi Jl. Gelam",
     "loc": "Kec. Candi, Sidoarjo",
+    "category": "jalan",
     "status": "dekat",
     "cek": false,
     "progress": 74,
@@ -1369,8 +1390,8 @@ module.exports = [
     "x": 52,
     "y": 66,
     "km": 1.8,
-    "lat": -7.4121999999999995,
-    "lng": 112.73440000000001,
+    "lat": -7.465,
+    "lng": 112.722,
     "reports": [],
     "stats": [
       {
@@ -1421,6 +1442,7 @@ module.exports = [
     "id": "p22",
     "name": "Penerangan Jl. Pahlawan",
     "loc": "Kec. Sidoarjo, Sidoarjo",
+    "category": "pju",
     "status": "tepat",
     "cek": false,
     "progress": 91,
@@ -1434,50 +1456,50 @@ module.exports = [
     "x": 69,
     "y": 31,
     "km": 2.6,
-    "lat": -7.3527,
-    "lng": 112.7718,
+    "lat": -7.4525,
+    "lng": 112.708,
     "reports": [],
     "stats": [
       {
-        "value": "34",
-        "label": "kecelakaan / tahun",
+        "value": "66",
+        "label": "titik lampu mati / gelap",
         "data": [
-          55,
-          60,
-          55,
-          57,
-          59,
-          75,
-          65,
-          78
-        ]
-      },
-      {
-        "value": "154",
-        "label": "titik lubang",
-        "data": [
-          55,
-          60,
-          61,
-          66,
-          69,
-          65,
-          66,
-          80
-        ]
-      },
-      {
-        "value": "23.796",
-        "label": "kendaraan / hari",
-        "data": [
-          55,
-          51,
+          42,
+          50,
+          46,
           53,
-          64,
-          69,
-          72,
-          66,
-          71
+          51,
+          60,
+          56,
+          60
+        ]
+      },
+      {
+        "value": "15",
+        "label": "kerawanan malam / tahun",
+        "data": [
+          16,
+          15,
+          16,
+          18,
+          21,
+          21,
+          20,
+          23
+        ]
+      },
+      {
+        "value": "11.559",
+        "label": "pengendara malam / hari",
+        "data": [
+          33,
+          31,
+          32,
+          38,
+          41,
+          43,
+          40,
+          43
         ]
       }
     ]
@@ -1486,6 +1508,7 @@ module.exports = [
     "id": "p23",
     "name": "Perbaikan Jl. Raya Tanggulangin",
     "loc": "Kec. Tanggulangin, Sidoarjo",
+    "category": "jalan",
     "status": "telat",
     "cek": false,
     "progress": 57,
@@ -1499,8 +1522,8 @@ module.exports = [
     "x": 70,
     "y": 86,
     "km": 3.6,
-    "lat": -7.4462,
-    "lng": 112.774,
+    "lat": -7.498,
+    "lng": 112.715,
     "reports": [],
     "stats": [
       {
@@ -1551,6 +1574,7 @@ module.exports = [
     "id": "p24",
     "name": "Peningkatan Jl. Tlasih–Tulangan",
     "loc": "Kec. Tulangan, Sidoarjo",
+    "category": "jalan",
     "status": "tepat",
     "cek": false,
     "progress": 51,
@@ -1564,8 +1588,8 @@ module.exports = [
     "x": 87,
     "y": 26,
     "km": 4.2,
-    "lat": -7.3442,
-    "lng": 112.8114,
+    "lat": -7.478,
+    "lng": 112.645,
     "reports": [],
     "stats": [
       {

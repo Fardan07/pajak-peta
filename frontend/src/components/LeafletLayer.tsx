@@ -70,8 +70,8 @@ export default function LeafletLayer({
       ],
       maxBoundsViscosity: 0.8,
     })
-    L.control.zoom({ position: 'topright' }).addTo(m)
-    m.fitBounds(L.latLngBounds(projects.map((p) => [p.lat, p.lng] as [number, number])), { padding: [48, 48] })
+    const fitList = allProjects && allProjects.length ? allProjects : projects
+    m.fitBounds(L.latLngBounds(fitList.map((p) => [p.lat, p.lng] as [number, number])), { padding: [48, 48] })
     const bump = () => { setZoom(m.getZoom()); tick((n) => n + 1) }
     m.on('move zoom', bump)
     m.on('click', () => {

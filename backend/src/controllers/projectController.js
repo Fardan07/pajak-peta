@@ -7,7 +7,7 @@ const mockProjects = require('../data/mockProjects');
 async function getProjectsFromSource() {
   try {
     const projectsRes = await db.query(
-      `SELECT id, name, loc, status, cek, progress, elapsed, sisa, cost, apbd, contractor,
+      `SELECT id, name, loc, category, status, cek, progress, elapsed, sisa, cost, apbd, contractor,
               start, "end", x, y, lat, lng, km, stats
        FROM projects
        ORDER BY CAST(SUBSTRING(id FROM 2) AS INTEGER) ASC`
@@ -37,6 +37,7 @@ async function getProjectsFromSource() {
       id: p.id,
       name: p.name,
       loc: p.loc,
+      category: p.category || 'jalan',
       status: p.status,
       cek: Boolean(p.cek),
       progress: Number(p.progress),

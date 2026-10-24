@@ -27,6 +27,8 @@ import {
   calcUrgencyScore,
   evaluateCostPerKm,
   getCostPerKmBenchmark,
+  CATEGORY_META,
+  getProjectCategory,
   num,
   projects as defaultProjects,
   rupiahShort,
@@ -151,6 +153,8 @@ export default function ProjectDetail({
   const ProfIcon = prof.icon
 
   const urgency = calcUrgencyScore(p)
+  const category = p.category ?? getProjectCategory(p.name)
+  const catMeta = CATEGORY_META[category]
   const benchmark = getCostPerKmBenchmark(defaultProjects)
   const costEval = evaluateCostPerKm(p, benchmark.median)
 
@@ -199,7 +203,11 @@ export default function ProjectDetail({
 
           {/* Location & Status Overlay */}
           <div className="absolute inset-x-4 bottom-3 flex items-end justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="inline-flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-0.5 text-[11px] font-bold text-white backdrop-blur-md border border-white/15">
+                <span>{catMeta.icon}</span>
+                <span>{catMeta.label}</span>
+              </span>
               <StatusChip status={p.status} />
               {p.cek && <StatusChip cek />}
             </div>
@@ -550,8 +558,35 @@ export default function ProjectDetail({
 
             {/* Card C: Statistik Daerah */}
             <section className="mx-4 rounded-2xl border border-line bg-surface p-5 shadow-card">
-              <SectionLabel n="C" title="Statistik Daerah" />
-              <p className="-mt-2 mb-4 text-xs text-sub">Kenapa proyek ini diprioritaskan untuk dibangun?</p>
+              <SectionLabel
+                n="C"
+                title={
+                  category === 'bangunan'
+                    ? 'Statistik Fasilitas & Pengunjung'
+                    : category === 'drainase'
+                    ? 'Statistik Genangan & Pengendali Banjir'
+                    : category === 'jembatan'
+                    ? 'Statistik Teknis Jembatan'
+                    : category === 'pju'
+                    ? 'Statistik Penerangan & Keamanan'
+                    : category === 'trotoar'
+                    ? 'Statistik Pedestrian & Pejalan Kaki'
+                    : 'Statistik Daerah'
+                }
+              />
+              <p className="-mt-2 mb-4 text-xs text-sub">
+                {category === 'bangunan'
+                  ? 'Kebutuhan revitalisasi ruang publik & fasilitas harian warga Sidoarjo'
+                  : category === 'drainase'
+                  ? 'Frekuensi banjir genangan & dampaknya terhadap pemukiman warga'
+                  : category === 'jembatan'
+                  ? 'Beban kendaraan harian & kondisi struktur jembatan penghubung'
+                  : category === 'pju'
+                  ? 'Tingkat kegelapan ruas jalan & kerawanan keselamatan di malam hari'
+                  : category === 'trotoar'
+                  ? 'Aksesibilitas fasilitas pejalan kaki & penataan ruang pejalan'
+                  : 'Kenapa proyek ini diprioritaskan untuk dibangun?'}
+              </p>
               <div className="grid grid-cols-3 gap-2">
                 {p.stats.map((s) => (
                   <StatTile key={s.label} {...s} />
@@ -566,7 +601,19 @@ export default function ProjectDetail({
                   </span>
                   <div className="min-w-0">
                     <div className="text-xs font-bold text-ink">Indeks Urgensi Lapangan: {urgency}/100</div>
-                    <div className="text-[11px] text-sub truncate">Dihitung dari riwayat kecelakaan, lubang, &amp; traffic</div>
+                    <div className="text-[11px] text-sub truncate">
+                      {category === 'bangunan'
+                        ? 'Dihitung dari kepadatan pengunjung, kerusakan fasilitas, & laporan keluhan'
+                        : category === 'drainase'
+                        ? 'Dihitung dari frekuensi genangan, tinggi air banjir, & warga terdampak'
+                        : category === 'jembatan'
+                        ? 'Dihitung dari volume kendaraan, titik retak struktur, & usia jembatan'
+                        : category === 'pju'
+                        ? 'Dihitung dari titik lampu mati, kerawanan malam, & volume pengguna jalan'
+                        : category === 'trotoar'
+                        ? 'Dihitung dari pejalan kaki, titik trotoar rusak, & hambatan akses'
+                        : 'Dihitung dari riwayat kecelakaan, titik lubang, & traffic'}
+                    </div>
                   </div>
                 </div>
                 {onCompare && (

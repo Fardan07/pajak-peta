@@ -7,6 +7,7 @@ CREATE TABLE projects (
     id VARCHAR(50) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     loc VARCHAR(150) NOT NULL,
+    category VARCHAR(50) NOT NULL DEFAULT 'jalan',
     status VARCHAR(20) NOT NULL,
     cek BOOLEAN NOT NULL DEFAULT FALSE,
     progress INT NOT NULL,

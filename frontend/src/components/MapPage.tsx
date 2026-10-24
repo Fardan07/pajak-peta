@@ -91,7 +91,7 @@ export default function MapPage({
     <div ref={wrap} className="relative flex min-h-0 flex-1 overflow-hidden">
       <div className="relative min-w-0 flex-1 overflow-hidden bg-[#EFEBE2] transition-[flex-basis] duration-200">
         {live ? (
-          <GoogleMapLayer apiKey={apiKey} list={list} selectedId={selectedId} onSelect={setSelectedId} mapType={mapType === 'hybrid' ? 'hybrid' : 'roadmap'} onError={setMapErr} showBoundaries={showBoundaries} />
+          <GoogleMapLayer apiKey={apiKey} list={list} selectedId={selectedId} onSelect={setSelectedId} mapType={mapType === 'hybrid' ? 'hybrid' : 'roadmap'} onError={setMapErr} showBoundaries={showBoundaries} projects={allProjects} />
         ) : (
           <LeafletLayer list={list} selectedId={selectedId} onSelect={setSelectedId} mapType={mapType} projects={allProjects} showBoundaries={showBoundaries} />
         )}
