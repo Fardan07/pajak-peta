@@ -70,6 +70,51 @@ async function runTests() {
   assert.ok(Number(res.rows[0].count) >= 6, 'Database Neon harus memiliki minimal 6 proyek');
   console.log(`✅ Uji 3 (Neon PostgreSQL Query): Lulus (${res.rows[0].count} proyek terverifikasi di Neon DB)!`);
 
+  // 4. Uji syncEngine (enrichProjectInput, geocodeKecamatan, detectCategory)
+  const { enrichProjectInput, geocodeKecamatan, detectCategory, computeStatus } = require('./src/utils/syncEngine');
+  
+  const testSubdistrict = geocodeKecamatan('Kec. Waru, Sidoarjo', 'Flyover Aloha');
+  assert.ok(testSubdistrict.lat < -7.34 && testSubdistrict.lat > -7.37, 'Lat Waru harus di sekitar -7.35');
+  assert.ok(testSubdistrict.lng > 112.71 && testSubdistrict.lng < 112.74, 'Lng Waru harus di sekitar 112.72');
+
+  const catDrainase = detectCategory('Normalisasi Saluran Drainase Kali Sidokare');
+  assert.strictEqual(catDrainase, 'drainase', 'Kategori harus terdeteksi sebagai drainase');
+
+  const catJembatan = detectCategory('Pembangunan Flyover Aloha Waru');
+  assert.strictEqual(catJembatan, 'jembatan', 'Kategori harus terdeteksi sebagai jembatan');
+
+  const statusTe = computeStatus(85, 60);
+  assert.strictEqual(statusTe, 'tepat', 'Status selisih +25 harus tepat');
+
+  const statusTelat = computeStatus(30, 60);
+  assert.strictEqual(statusTelat, 'telat', 'Status selisih -30 harus telat');
+
+  const mockExisting = [
+    { id: 'p1', name: 'Perbaikan Jalan Raya Gedangan', progress: 68, elapsed: 62, cost: 4800000000, category: 'jalan', lat: -7.382, lng: 112.7245 }
+  ];
+  const assigned = new Set(['p1']);
+
+  // Enrich update
+  const updatedRow = enrichProjectInput({ id: 'p1', progress: 88, elapsed: 70 }, mockExisting, assigned);
+  assert.strictEqual(updatedRow.isUpdate, true, 'Harus terdeteksi sebagai update');
+  assert.strictEqual(updatedRow.id, 'p1', 'ID harus tetap p1');
+  assert.strictEqual(updatedRow.progress, 88, 'Progress harus 88');
+  assert.strictEqual(updatedRow.prevProgress, 68, 'prevProgress harus 68');
+
+  // Enrich new project
+  const newRow = enrichProjectInput({
+    name: 'Pembangunan Flyover Aloha Tahap 2',
+    loc: 'Kec. Waru, Sidoarjo',
+    progress: 45,
+    anggaran_rp: 12500000000
+  }, mockExisting, assigned);
+  assert.strictEqual(newRow.isUpdate, false, 'Harus terdeteksi sebagai proyek baru');
+  assert.strictEqual(newRow.id, 'p2', 'ID proyek baru berikutnya harus p2');
+  assert.strictEqual(newRow.category, 'jembatan', 'Kategori otomatis jembatan');
+  assert.strictEqual(newRow.cost, 12500000000, 'Anggaran harus 12.5 Milyar');
+  assert.ok(newRow.stats.length === 3, 'Harus memiliki 3 metrik statistik');
+  console.log('✅ Uji 4 (syncEngine Geocoding & Auto-Enrichment): Lulus!');
+
   await db.pool.end();
   console.log('🎉 SEMUA PENGUJIAN BACKEND BERHASIL!');
 }
@@ -78,3 +123,4 @@ runTests().catch(err => {
   console.error('❌ Pengujian gagal:', err);
   process.exit(1);
 });
+

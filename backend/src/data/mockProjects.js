@@ -1,14 +1,14 @@
-// mockProjects.js generated from frontend/src/data.ts
+// mockProjects.js — Updated by Bulk Auto-Sync
 
 module.exports = [
   {
     "id": "p1",
     "name": "Perbaikan Jalan Raya Gedangan Segmen 2",
-    "loc": "Kec. Gedangan, Sidoarjo",
+    "loc": "Kec. Sidoarjo, Sidoarjo",
     "category": "jalan",
     "status": "tepat",
     "cek": false,
-    "progress": 68,
+    "progress": 88,
     "elapsed": 62,
     "sisa": 41,
     "cost": 4800000000,
@@ -21,6 +21,50 @@ module.exports = [
     "km": 2.4,
     "lat": -7.382,
     "lng": 112.7245,
+    "stats": [
+      {
+        "data": [
+          22,
+          25,
+          24,
+          29,
+          31,
+          33,
+          36,
+          37
+        ],
+        "label": "kecelakaan / tahun",
+        "value": "37"
+      },
+      {
+        "data": [
+          90,
+          120,
+          118,
+          150,
+          171,
+          190,
+          205,
+          212
+        ],
+        "label": "titik lubang",
+        "value": "212"
+      },
+      {
+        "data": [
+          14,
+          15,
+          15,
+          16,
+          17,
+          17,
+          18,
+          18.4
+        ],
+        "label": "kendaraan / hari",
+        "value": "18.400"
+      }
+    ],
     "reports": [
       {
         "id": "r1",
@@ -39,50 +83,6 @@ module.exports = [
         "verdict": "tidak",
         "text": "Masih ada lubang di dekat pertigaan Gedangan, belum tersentuh.",
         "ago": "3 hari lalu"
-      }
-    ],
-    "stats": [
-      {
-        "value": "37",
-        "label": "kecelakaan / tahun",
-        "data": [
-          22,
-          25,
-          24,
-          29,
-          31,
-          33,
-          36,
-          37
-        ]
-      },
-      {
-        "value": "212",
-        "label": "titik lubang",
-        "data": [
-          90,
-          120,
-          118,
-          150,
-          171,
-          190,
-          205,
-          212
-        ]
-      },
-      {
-        "value": "18.400",
-        "label": "kendaraan / hari",
-        "data": [
-          14,
-          15,
-          15,
-          16,
-          17,
-          17,
-          18,
-          18.4
-        ]
       }
     ]
   },
@@ -353,11 +353,11 @@ module.exports = [
   {
     "id": "p6",
     "name": "Pelebaran Jl. Brigjen Katamso",
-    "loc": "Kec. Waru, Sidoarjo",
+    "loc": "Kec. Sidoarjo, Sidoarjo",
     "category": "jalan",
-    "status": "telat",
+    "status": "dekat",
     "cek": true,
-    "progress": 41,
+    "progress": 62,
     "elapsed": 82,
     "sisa": 12,
     "cost": 9400000000,
@@ -370,6 +370,50 @@ module.exports = [
     "km": 2.8,
     "lat": -7.3565,
     "lng": 112.744,
+    "stats": [
+      {
+        "data": [
+          58,
+          58,
+          53,
+          66,
+          58,
+          64,
+          73,
+          75
+        ],
+        "label": "kecelakaan / tahun",
+        "value": "36"
+      },
+      {
+        "data": [
+          48,
+          58,
+          64,
+          63,
+          71,
+          72,
+          70,
+          79
+        ],
+        "label": "titik lubang",
+        "value": "119"
+      },
+      {
+        "data": [
+          50,
+          58,
+          52,
+          66,
+          70,
+          62,
+          76,
+          67
+        ],
+        "label": "kendaraan / hari",
+        "value": "7.716"
+      }
+    ],
     "reports": [
       {
         "id": "r4",
@@ -388,50 +432,6 @@ module.exports = [
         "verdict": "tidak",
         "text": "Pelebaran baru separuh, sisanya masih tanah.",
         "ago": "2 hari lalu"
-      }
-    ],
-    "stats": [
-      {
-        "value": "36",
-        "label": "kecelakaan / tahun",
-        "data": [
-          58,
-          58,
-          53,
-          66,
-          58,
-          64,
-          73,
-          75
-        ]
-      },
-      {
-        "value": "119",
-        "label": "titik lubang",
-        "data": [
-          48,
-          58,
-          64,
-          63,
-          71,
-          72,
-          70,
-          79
-        ]
-      },
-      {
-        "value": "7.716",
-        "label": "kendaraan / hari",
-        "data": [
-          50,
-          58,
-          52,
-          66,
-          70,
-          62,
-          76,
-          67
-        ]
       }
     ]
   },
@@ -1635,5 +1635,137 @@ module.exports = [
         ]
       }
     ]
+  },
+  {
+    "id": "p25",
+    "name": "Pembangunan Flyover Aloha Waru Tahap 2",
+    "loc": "Kec. Waru, Sidoarjo",
+    "category": "jembatan",
+    "status": "dekat",
+    "cek": false,
+    "progress": 35,
+    "elapsed": 50,
+    "sisa": 98,
+    "cost": 18500000000,
+    "apbd": 60,
+    "contractor": "PT Pelaksana Sidoarjo",
+    "start": "15 Agu 2026",
+    "end": "15 Des 2026",
+    "x": 50,
+    "y": 50,
+    "km": 1.5,
+    "lat": -7.35494,
+    "lng": 112.73215,
+    "stats": [
+      {
+        "value": "24.500",
+        "label": "kendaraan melintas / hari",
+        "data": [
+          19,
+          19,
+          19,
+          20,
+          23,
+          24,
+          23,
+          24
+        ]
+      },
+      {
+        "value": "28",
+        "label": "titik retak & deformasi",
+        "data": [
+          14,
+          13,
+          17,
+          19,
+          23,
+          25,
+          27,
+          29
+        ]
+      },
+      {
+        "value": "35 tahun",
+        "label": "usia struktur jembatan",
+        "data": [
+          29,
+          32,
+          31,
+          31,
+          32,
+          34,
+          35,
+          37
+        ]
+      }
+    ],
+    "reports": []
+  },
+  {
+    "id": "p26",
+    "name": "Normalisasi Saluran Drainase Kali Sidokare",
+    "loc": "Kec. Sidoarjo, Sidoarjo",
+    "category": "drainase",
+    "status": "tepat",
+    "cek": false,
+    "progress": 55,
+    "elapsed": 50,
+    "sisa": 68,
+    "cost": 4200000000,
+    "apbd": 60,
+    "contractor": "PT Pelaksana Sidoarjo",
+    "start": "15 Agu 2026",
+    "end": "15 Des 2026",
+    "x": 50,
+    "y": 50,
+    "km": 1.5,
+    "lat": -7.4468,
+    "lng": 112.71367,
+    "stats": [
+      {
+        "value": "14",
+        "label": "kejadian genangan / tahun",
+        "data": [
+          6,
+          5,
+          7,
+          11,
+          11,
+          13,
+          14,
+          14
+        ]
+      },
+      {
+        "value": "45 cm",
+        "label": "rata-rata tinggi genangan",
+        "data": [
+          22,
+          25,
+          28,
+          31,
+          34,
+          39,
+          41,
+          46
+        ]
+      },
+      {
+        "value": "1.850",
+        "label": "warga terdampak banjir",
+        "data": [
+          10,
+          12,
+          14,
+          12,
+          15,
+          18,
+          18,
+          19
+        ]
+      }
+    ],
+    "reports": []
   }
 ];

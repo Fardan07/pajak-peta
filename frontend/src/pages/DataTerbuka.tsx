@@ -12,6 +12,7 @@ import {
   Search,
   SlidersHorizontal,
   TrendingUp,
+  UploadCloud,
   X,
 } from 'lucide-react'
 import { Accordion, Button, DataTag, StatusChip, cx, useToast } from '../components/ui'
@@ -40,9 +41,13 @@ const dictionary: [string, string, string][] = [
 
 interface DataTerbukaProps {
   projects?: Project[]
+  onOpenAdminSync?: () => void
 }
 
-export default function DataTerbuka({ projects = defaultProjects }: DataTerbukaProps) {
+export default function DataTerbuka({
+  projects = defaultProjects,
+  onOpenAdminSync,
+}: DataTerbukaProps) {
   const toast = useToast()
   const [q, setQ] = useState('')
   const [selectedDistrict, setSelectedDistrict] = useState<string>('all')
@@ -140,6 +145,17 @@ export default function DataTerbuka({ projects = defaultProjects }: DataTerbukaP
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+            {onOpenAdminSync && (
+              <Button
+                size="lg"
+                variant="secondary"
+                icon={<UploadCloud size={18} className="text-brand" />}
+                onClick={onOpenAdminSync}
+                className="border-brand/40 bg-brand/5 hover:bg-brand/10 text-brand font-bold shadow-xs hover:shadow transition-all"
+              >
+                Sinkronisasi Data Dinas
+              </Button>
+            )}
             <Button size="lg" icon={<FileSpreadsheet size={18} />} onClick={csv} className="shadow-xs hover:shadow transition-all">
               Unduh CSV
             </Button>

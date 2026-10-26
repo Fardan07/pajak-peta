@@ -213,7 +213,12 @@ export default function GoogleMapLayer({
   useEffect(() => {
     const p = allProjects.find((x) => x.id === selectedId)
     if (!map || !p) return
-    const t = setTimeout(() => map.panTo({ lat: p.lat, lng: p.lng }), 260)
+    const t = setTimeout(() => {
+      map.panTo({ lat: p.lat, lng: p.lng })
+      if (map.getZoom() < 14) {
+        map.setZoom(14)
+      }
+    }, 200)
     return () => clearTimeout(t)
   }, [map, selectedId, allProjects])
 

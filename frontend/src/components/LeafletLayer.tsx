@@ -181,7 +181,11 @@ export default function LeafletLayer({
     const p = allProjects.find((x) => x.id === selectedId)
     const m = mapRef.current
     if (!m || !p) return
-    const t = setTimeout(() => { m.invalidateSize(); m.panTo([p.lat, p.lng]) }, 260)
+    const targetZoom = Math.max(m.getZoom(), 14.5)
+    const t = setTimeout(() => {
+      m.invalidateSize()
+      m.flyTo([p.lat, p.lng], targetZoom, { duration: 0.9 })
+    }, 200)
     return () => clearTimeout(t)
   }, [selectedId, allProjects])
 

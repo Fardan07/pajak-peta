@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Database, Map as MapIcon, Scale, Sparkles, Wallet } from 'lucide-react'
+import { Database, Map as MapIcon, Scale, Sparkles, UploadCloud, Wallet } from 'lucide-react'
+import AdminSyncModal from './components/AdminSyncModal'
 import CekLapangan from './components/CekLapangan'
 import MapPage from './components/MapPage'
 import type { Filter } from './components/MapControls'
@@ -30,6 +31,7 @@ function Shell() {
   const [filter, setFilter] = useState<Filter>('all')
   const [q, setQ] = useState('')
   const [cekOpen, setCekOpen] = useState(false)
+  const [adminModalOpen, setAdminModalOpen] = useState(false)
   const [compareAId, setCompareAId] = useState<string>('p1')
   const [, bump] = useState(0)
 
@@ -111,6 +113,15 @@ function Shell() {
         </button>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setAdminModalOpen(true)}
+            className="flex h-9 items-center gap-1.5 rounded-lg border border-brand/30 bg-brand/10 px-2.5 sm:px-3 text-xs font-bold text-brand hover:bg-brand/20 transition-all shadow-xs"
+            title="Portal Sinkronisasi Data Dinas (Admin PU)"
+          >
+            <UploadCloud size={14} className="text-brand shrink-0" />
+            <span className="hidden sm:inline">Portal Dinas</span>
+            <span className="sm:hidden">Dinas</span>
+          </button>
           <DataTag className="md:hidden" />
           <nav className="hidden items-center gap-1 md:flex" aria-label="Navigasi utama">
             {nav.map((n) => (
@@ -172,7 +183,12 @@ function Shell() {
           }}
         />
       )}
-      {page === 'data' && <DataTerbuka projects={projectList} />}
+      {page === 'data' && (
+        <DataTerbuka
+          projects={projectList}
+          onOpenAdminSync={() => setAdminModalOpen(true)}
+        />
+      )}
       {page === 'komponen' && <Komponen />}
 
       {/* Mobile Bottom Navigation */}
@@ -198,6 +214,19 @@ function Shell() {
       </nav>
 
       {cekOpen && selected && <CekLapangan p={selected} onClose={() => setCekOpen(false)} onSubmit={addReport} />}
+
+      <AdminSyncModal
+        isOpen={adminModalOpen}
+        onClose={() => setAdminModalOpen(false)}
+        existingProjects={projectList}
+        onSyncSuccess={(updated, firstSyncedId) => {
+          setProjectList(updated)
+        }}
+        onViewInMap={(targetId) => {
+          setSelectedId(targetId)
+          setPage('peta')
+        }}
+      />
     </div>
   )
 }
