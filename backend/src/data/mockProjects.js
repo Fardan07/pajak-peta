@@ -4,12 +4,12 @@ module.exports = [
   {
     "id": "p1",
     "name": "Perbaikan Jalan Raya Gedangan Segmen 2",
-    "loc": "Kec. Sidoarjo, Sidoarjo",
+    "loc": "Kec. Gedangan, Sidoarjo",
     "category": "jalan",
     "status": "tepat",
     "cek": false,
     "progress": 88,
-    "elapsed": 62,
+    "elapsed": 75,
     "sisa": 41,
     "cost": 4800000000,
     "apbd": 60,
@@ -352,19 +352,19 @@ module.exports = [
   },
   {
     "id": "p6",
-    "name": "Pelebaran Jl. Brigjen Katamso",
-    "loc": "Kec. Sidoarjo, Sidoarjo",
-    "category": "jalan",
-    "status": "dekat",
+    "name": "Rehabilitasi Jembatan Pagerwojo",
+    "loc": "Kec. Buduran, Sidoarjo",
+    "category": "jembatan",
+    "status": "tepat",
     "cek": true,
     "progress": 62,
-    "elapsed": 82,
+    "elapsed": 60,
     "sisa": 12,
-    "cost": 9400000000,
+    "cost": 18900000000,
     "apbd": 30,
-    "contractor": "CV Andalan Mitra Konstruksi",
+    "contractor": "CV Delta Prasetya",
     "start": "27 Agu 2026",
-    "end": "2 Nov 2026",
+    "end": "10 Nov 2026",
     "x": 24,
     "y": 43,
     "km": 2.8,
@@ -1641,16 +1641,16 @@ module.exports = [
     "name": "Pembangunan Flyover Aloha Waru Tahap 2",
     "loc": "Kec. Waru, Sidoarjo",
     "category": "jembatan",
-    "status": "dekat",
+    "status": "tepat",
     "cek": false,
     "progress": 35,
-    "elapsed": 50,
+    "elapsed": 30,
     "sisa": 98,
     "cost": 18500000000,
-    "apbd": 60,
-    "contractor": "PT Pelaksana Sidoarjo",
+    "apbd": 45,
+    "contractor": "PT Adhi Karya Nusantara",
     "start": "15 Agu 2026",
-    "end": "15 Des 2026",
+    "end": "20 Des 2026",
     "x": 50,
     "y": 50,
     "km": 1.5,
@@ -1658,8 +1658,6 @@ module.exports = [
     "lng": 112.73215,
     "stats": [
       {
-        "value": "24.500",
-        "label": "kendaraan melintas / hari",
         "data": [
           19,
           19,
@@ -1669,11 +1667,11 @@ module.exports = [
           24,
           23,
           24
-        ]
+        ],
+        "label": "kendaraan melintas / hari",
+        "value": "24.500"
       },
       {
-        "value": "28",
-        "label": "titik retak & deformasi",
         "data": [
           14,
           13,
@@ -1683,11 +1681,11 @@ module.exports = [
           25,
           27,
           29
-        ]
+        ],
+        "label": "titik retak & deformasi",
+        "value": "28"
       },
       {
-        "value": "35 tahun",
-        "label": "usia struktur jembatan",
         "data": [
           29,
           32,
@@ -1697,7 +1695,9 @@ module.exports = [
           34,
           35,
           37
-        ]
+        ],
+        "label": "usia struktur jembatan",
+        "value": "35 tahun"
       }
     ],
     "reports": []
@@ -1710,13 +1710,13 @@ module.exports = [
     "status": "tepat",
     "cek": false,
     "progress": 55,
-    "elapsed": 50,
+    "elapsed": 48,
     "sisa": 68,
     "cost": 4200000000,
-    "apbd": 60,
-    "contractor": "PT Pelaksana Sidoarjo",
+    "apbd": 85,
+    "contractor": "PT Wijaya Drainase Utama",
     "start": "15 Agu 2026",
-    "end": "15 Des 2026",
+    "end": "15 Jan 2027",
     "x": 50,
     "y": 50,
     "km": 1.5,
@@ -1724,8 +1724,6 @@ module.exports = [
     "lng": 112.71367,
     "stats": [
       {
-        "value": "14",
-        "label": "kejadian genangan / tahun",
         "data": [
           6,
           5,
@@ -1735,11 +1733,11 @@ module.exports = [
           13,
           14,
           14
-        ]
+        ],
+        "label": "kejadian genangan / tahun",
+        "value": "14"
       },
       {
-        "value": "45 cm",
-        "label": "rata-rata tinggi genangan",
         "data": [
           22,
           25,
@@ -1749,11 +1747,11 @@ module.exports = [
           39,
           41,
           46
-        ]
+        ],
+        "label": "rata-rata tinggi genangan",
+        "value": "45 cm"
       },
       {
-        "value": "1.850",
-        "label": "warga terdampak banjir",
         "data": [
           10,
           12,
@@ -1763,7 +1761,9 @@ module.exports = [
           18,
           18,
           19
-        ]
+        ],
+        "label": "warga terdampak banjir",
+        "value": "1.850"
       }
     ],
     "reports": []
