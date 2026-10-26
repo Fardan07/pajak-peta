@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo } from "react"
 import {
   AlertCircle,
   AlertTriangle,
@@ -20,8 +20,8 @@ import {
   TrendingUp,
   Truck,
   Users,
-} from 'lucide-react'
-import { Button, DataTag, ProgressBar, StatusChip, cx } from '../components/ui'
+} from "lucide-react"
+import { Button, DataTag, ProgressBar, StatusChip, cx } from "../components/ui"
 import {
   calcUrgencyScore,
   evaluateCostPerKm,
@@ -31,8 +31,8 @@ import {
   num,
   projects as defaultProjects,
   rupiahShort,
-} from '../data'
-import type { Project } from '../data'
+} from "../data"
+import type { Project } from "../data"
 
 interface BandingkanProps {
   projects?: Project[]
@@ -47,18 +47,23 @@ export default function Bandingkan({
   initialBId,
   onSelectProject,
 }: BandingkanProps) {
-  const [idA, setIdA] = useState<string>(() => initialAId || projects[0]?.id || 'p1')
+  const [idA, setIdA] = useState<string>(
+    () => initialAId || projects[0]?.id || "p1",
+  )
   const [idB, setIdB] = useState<string>(() => {
     if (initialBId && initialBId !== initialAId) return initialBId
     // Default to a different contrasting project (e.g. p6 Katamso which is delayed/high urgency)
     const alt = projects.find((p) => p.id !== (initialAId || projects[0]?.id))
-    return alt?.id || 'p6'
+    return alt?.id || "p6"
   })
 
-  const pA = useMemo(() => projects.find((p) => p.id === idA) ?? projects[0], [projects, idA])
+  const pA = useMemo(
+    () => projects.find((p) => p.id === idA) ?? projects[0],
+    [projects, idA],
+  )
   const pB = useMemo(
     () => projects.find((p) => p.id === idB) ?? projects[1] ?? projects[0],
-    [projects, idB]
+    [projects, idB],
   )
 
   const benchmark = useMemo(() => getCostPerKmBenchmark(projects), [projects])
@@ -66,8 +71,14 @@ export default function Bandingkan({
   const urgA = useMemo(() => calcUrgencyScore(pA), [pA])
   const urgB = useMemo(() => calcUrgencyScore(pB), [pB])
 
-  const costStatA = useMemo(() => evaluateCostPerKm(pA, benchmark.median), [pA, benchmark.median])
-  const costStatB = useMemo(() => evaluateCostPerKm(pB, benchmark.median), [pB, benchmark.median])
+  const costStatA = useMemo(
+    () => evaluateCostPerKm(pA, benchmark.median),
+    [pA, benchmark.median],
+  )
+  const costStatB = useMemo(
+    () => evaluateCostPerKm(pB, benchmark.median),
+    [pB, benchmark.median],
+  )
 
   // Swap projects handler
   const handleSwap = () => {
@@ -77,12 +88,15 @@ export default function Bandingkan({
 
   // Determine urgency winner
   const urgencyDiff = Math.abs(urgA - urgB)
-  const moreUrgent = urgA >= urgB ? 'A' : 'B'
+  const moreUrgent = urgA >= urgB ? "A" : "B"
 
   const catA = pA.category ?? getProjectCategory(pA.name)
   const catB = pB.category ?? getProjectCategory(pB.name)
   const metaA = CATEGORY_META[catA]
   const metaB = CATEGORY_META[catB]
+
+  const urgentProj = moreUrgent === "A" ? pA : pB
+  const urgentMeta = moreUrgent === "A" ? metaA : metaB
 
   return (
     <div className="scroll-quiet min-h-0 flex-1 overflow-y-auto bg-canvas">
@@ -92,14 +106,17 @@ export default function Bandingkan({
           <div>
             <div className="inline-flex items-center gap-1.5 rounded-full border border-brand/20 bg-brand/5 px-3 py-1 text-xs font-bold text-brand mb-2">
               <Scale size={14} />
-              <span>Data-Driven Decision • Transparansi Prioritas Pembangunan</span>
+              <span>
+                Data-Driven Decision • Transparansi Prioritas Pembangunan
+              </span>
             </div>
             <h1 className="mt-1 text-[28px] font-extrabold leading-tight text-ink md:text-[40px]">
               Kenapa Jalan Ini Dibangun Duluan?
             </h1>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-sub sm:text-base">
-              Bandingkan dua proyek secara berdampingan untuk melihat justifikasi teknis, urgensi keselamatan warga,
-              efisiensi anggaran per kilometer, serta deviasi pengerjaannya di lapangan.
+              Bandingkan dua proyek secara berdampingan untuk melihat
+              justifikasi teknis, urgensi keselamatan warga, efisiensi anggaran
+              per kilometer, serta deviasi pengerjaannya di lapangan.
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -112,9 +129,14 @@ export default function Bandingkan({
           <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
             {/* Proyek A Dropdown */}
             <div>
-              <label htmlFor="select-proyek-a" className="mb-1.5 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-brand">
+              <label
+                htmlFor="select-proyek-a"
+                className="mb-1.5 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-brand"
+              >
                 <span>Proyek A (Sisi Kiri)</span>
-                <span className="text-[11px] text-sub font-normal">Kecamatan: {pA.loc.split(',')[0]}</span>
+                <span className="text-[11px] text-sub font-normal">
+                  Kecamatan: {pA.loc.split(",")[0]}
+                </span>
               </label>
               <div className="relative">
                 <select
@@ -129,7 +151,10 @@ export default function Bandingkan({
                     </option>
                   ))}
                 </select>
-                <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sub" />
+                <ChevronDown
+                  size={16}
+                  className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sub"
+                />
               </div>
             </div>
 
@@ -147,9 +172,14 @@ export default function Bandingkan({
 
             {/* Proyek B Dropdown */}
             <div>
-              <label htmlFor="select-proyek-b" className="mb-1.5 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-[#A22920]">
+              <label
+                htmlFor="select-proyek-b"
+                className="mb-1.5 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-[#A22920]"
+              >
                 <span>Proyek B (Sisi Kanan)</span>
-                <span className="text-[11px] text-sub font-normal">Kecamatan: {pB.loc.split(',')[0]}</span>
+                <span className="text-[11px] text-sub font-normal">
+                  Kecamatan: {pB.loc.split(",")[0]}
+                </span>
               </label>
               <div className="relative">
                 <select
@@ -164,7 +194,10 @@ export default function Bandingkan({
                     </option>
                   ))}
                 </select>
-                <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sub" />
+                <ChevronDown
+                  size={16}
+                  className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sub"
+                />
               </div>
             </div>
           </div>
@@ -178,17 +211,22 @@ export default function Bandingkan({
             </span>
             <div className="min-w-0 flex-1">
               <h2 className="text-sm font-bold text-ink">
-                Analisis Prioritas:{' '}
+                Analisis Prioritas:{" "}
                 <strong className="text-brand">
-                  Proyek {moreUrgent} ({moreUrgent === 'A' ? pA.name : pB.name})
-                </strong>{' '}
-                memiliki Skor Urgensi lebih tinggi ({moreUrgent === 'A' ? urgA : urgB} vs{' '}
-                {moreUrgent === 'A' ? urgB : urgA}/100)
+                  Proyek {moreUrgent} ({moreUrgent === "A" ? pA.name : pB.name})
+                </strong>{" "}
+                memiliki Skor Urgensi lebih tinggi (
+                {moreUrgent === "A" ? urgA : urgB} vs{" "}
+                {moreUrgent === "A" ? urgB : urgA}/100)
               </h2>
               <p className="mt-1 text-xs text-sub leading-relaxed">
                 {urgencyDiff <= 5
-                  ? 'Kedua proyek memiliki tingkat urgensi yang hampir berimbang dari sisi riwayat kecelakaan jalan dan titik kerusakan.'
-                  : `Proyek ${moreUrgent} mendapatkan skor lebih tinggi karena memiliki dampak kerusakan yang lebih masif (${moreUrgent === 'A' ? lubangA : lubangB} titik lubang) dan volume kendaraan harian yang lebih padat.`}
+                  ? "Kedua proyek memiliki tingkat urgensi yang hampir berimbang dari sisi indikator lapangan dan kebutuhan warga di wilayahnya."
+                  : `Proyek ${moreUrgent} mendapatkan skor lebih tinggi berdasarkan justifikasi teknis ${urgentMeta.label.toLowerCase()} dengan ${
+                      urgentProj.stats?.[1]
+                        ? `${urgentProj.stats[1].label} (${urgentProj.stats[1].value})`
+                        : "tingkat kerusakan lebih tinggi"
+                    } serta skala dampak ke warga yang lebih mendesak.`}
               </p>
             </div>
           </div>
@@ -211,17 +249,29 @@ export default function Bandingkan({
               {/* Kolom A */}
               <div className="space-y-4 md:pr-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-brand uppercase">Proyek A</span>
+                  <span className="text-xs font-bold text-brand uppercase">
+                    Proyek A
+                  </span>
                   <StatusChip status={pA.status} cek={pA.cek} size="sm" />
                 </div>
-                <h3 className="text-base font-bold text-ink leading-snug">{pA.name}</h3>
+                <h3 className="text-base font-bold text-ink leading-snug">
+                  {pA.name}
+                </h3>
 
                 <div className="flex items-baseline gap-3 rounded-xl bg-canvas p-4 border border-line">
-                  <div className="text-4xl font-extrabold text-brand">{urgA}</div>
+                  <div className="text-4xl font-extrabold text-brand">
+                    {urgA}
+                  </div>
                   <div>
-                    <div className="text-xs font-bold text-ink">Skor Urgensi (0–100)</div>
+                    <div className="text-xs font-bold text-ink">
+                      Skor Urgensi (0–100)
+                    </div>
                     <div className="text-[11px] text-sub">
-                      {urgA >= 70 ? 'Prioritas Sangat Tinggi' : urgA >= 50 ? 'Prioritas Menengah' : 'Prioritas Reguler'}
+                      {urgA >= 70
+                        ? "Prioritas Sangat Tinggi"
+                        : urgA >= 50
+                          ? "Prioritas Menengah"
+                          : "Prioritas Reguler"}
                     </div>
                   </div>
                 </div>
@@ -230,8 +280,12 @@ export default function Bandingkan({
                 <div className="h-2 w-full overflow-hidden rounded-full bg-line/60">
                   <div
                     className={cx(
-                      'h-full transition-all duration-300',
-                      urgA >= 70 ? 'bg-[#1F8A5B]' : urgA >= 50 ? 'bg-[#D99A00]' : 'bg-sub'
+                      "h-full transition-all duration-300",
+                      urgA >= 70
+                        ? "bg-[#1F8A5B]"
+                        : urgA >= 50
+                          ? "bg-[#D99A00]"
+                          : "bg-sub",
                     )}
                     style={{ width: `${urgA}%` }}
                   />
@@ -241,17 +295,29 @@ export default function Bandingkan({
               {/* Kolom B */}
               <div className="space-y-4 pt-6 md:pt-0 md:pl-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#A22920] uppercase">Proyek B</span>
+                  <span className="text-xs font-bold text-[#A22920] uppercase">
+                    Proyek B
+                  </span>
                   <StatusChip status={pB.status} cek={pB.cek} size="sm" />
                 </div>
-                <h3 className="text-base font-bold text-ink leading-snug">{pB.name}</h3>
+                <h3 className="text-base font-bold text-ink leading-snug">
+                  {pB.name}
+                </h3>
 
                 <div className="flex items-baseline gap-3 rounded-xl bg-canvas p-4 border border-line">
-                  <div className="text-4xl font-extrabold text-[#A22920]">{urgB}</div>
+                  <div className="text-4xl font-extrabold text-[#A22920]">
+                    {urgB}
+                  </div>
                   <div>
-                    <div className="text-xs font-bold text-ink">Skor Urgensi (0–100)</div>
+                    <div className="text-xs font-bold text-ink">
+                      Skor Urgensi (0–100)
+                    </div>
                     <div className="text-[11px] text-sub">
-                      {urgB >= 70 ? 'Prioritas Sangat Tinggi' : urgB >= 50 ? 'Prioritas Menengah' : 'Prioritas Reguler'}
+                      {urgB >= 70
+                        ? "Prioritas Sangat Tinggi"
+                        : urgB >= 50
+                          ? "Prioritas Menengah"
+                          : "Prioritas Reguler"}
                     </div>
                   </div>
                 </div>
@@ -260,8 +326,12 @@ export default function Bandingkan({
                 <div className="h-2 w-full overflow-hidden rounded-full bg-line/60">
                   <div
                     className={cx(
-                      'h-full transition-all duration-300',
-                      urgB >= 70 ? 'bg-[#1F8A5B]' : urgB >= 50 ? 'bg-[#D99A00]' : 'bg-sub'
+                      "h-full transition-all duration-300",
+                      urgB >= 70
+                        ? "bg-[#1F8A5B]"
+                        : urgB >= 50
+                          ? "bg-[#D99A00]"
+                          : "bg-sub",
                     )}
                     style={{ width: `${urgB}%` }}
                   />
@@ -291,30 +361,46 @@ export default function Bandingkan({
               <div className="space-y-4 md:pr-6">
                 <div>
                   <span className="text-xs text-sub">Total Nilai Kontrak</span>
-                  <div className="text-2xl font-extrabold text-ink">{rupiahShort(pA.cost)}</div>
+                  <div className="text-2xl font-extrabold text-ink">
+                    {rupiahShort(pA.cost)}
+                  </div>
                   <div className="text-xs text-sub mt-0.5">
-                    PAD {pA.apbd}% ({rupiahShort((pA.cost * pA.apbd) / 100)}) • Pusat {100 - pA.apbd}%
+                    PAD {pA.apbd}% ({rupiahShort((pA.cost * pA.apbd) / 100)}) •
+                    Pusat {100 - pA.apbd}%
                   </div>
                 </div>
 
                 <div className="rounded-xl border border-line bg-canvas p-3.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-sub uppercase">Biaya Satuan</span>
+                    <span className="text-xs font-bold text-sub uppercase">
+                      Biaya Satuan
+                    </span>
                     <span
                       className={cx(
-                        'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold',
-                        costStatA.isHigh ? 'bg-[#FBF1D6] text-[#7A5600]' : 'bg-[#E6F3EC] text-[#14633F]'
+                        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold",
+                        costStatA.isHigh
+                          ? "bg-[#FBF1D6] text-[#7A5600]"
+                          : "bg-[#E6F3EC] text-[#14633F]",
                       )}
                     >
-                      {costStatA.isHigh ? <AlertTriangle size={12} /> : <CheckCircle2 size={12} />}
-                      {costStatA.isHigh ? 'Di Atas Rata-rata' : 'Biaya Wajar'}
+                      {costStatA.isHigh ? (
+                        <AlertTriangle size={12} />
+                      ) : (
+                        <CheckCircle2 size={12} />
+                      )}
+                      {costStatA.isHigh ? "Di Atas Rata-rata" : "Biaya Wajar"}
                     </span>
                   </div>
                   <div className="mt-1 text-xl font-extrabold text-ink">
-                    {rupiahShort(costStatA.costPerKm)} <span className="text-xs font-normal text-sub">/ km</span>
+                    {rupiahShort(costStatA.costPerKm)}{" "}
+                    <span className="text-xs font-normal text-sub">/ km</span>
                   </div>
                   <p className="mt-1 text-xs text-sub">
-                    Panjang fisik {pA.km} km ({costStatA.isHigh ? `+${costStatA.diffPct}% vs acuan` : 'sesuai acuan daerah'})
+                    Panjang fisik {pA.km} km (
+                    {costStatA.isHigh
+                      ? `+${costStatA.diffPct}% vs acuan`
+                      : "sesuai acuan daerah"}
+                    )
                   </p>
                 </div>
               </div>
@@ -323,30 +409,46 @@ export default function Bandingkan({
               <div className="space-y-4 pt-6 md:pt-0 md:pl-6">
                 <div>
                   <span className="text-xs text-sub">Total Nilai Kontrak</span>
-                  <div className="text-2xl font-extrabold text-ink">{rupiahShort(pB.cost)}</div>
+                  <div className="text-2xl font-extrabold text-ink">
+                    {rupiahShort(pB.cost)}
+                  </div>
                   <div className="text-xs text-sub mt-0.5">
-                    PAD {pB.apbd}% ({rupiahShort((pB.cost * pB.apbd) / 100)}) • Pusat {100 - pB.apbd}%
+                    PAD {pB.apbd}% ({rupiahShort((pB.cost * pB.apbd) / 100)}) •
+                    Pusat {100 - pB.apbd}%
                   </div>
                 </div>
 
                 <div className="rounded-xl border border-line bg-canvas p-3.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-sub uppercase">Biaya Satuan</span>
+                    <span className="text-xs font-bold text-sub uppercase">
+                      Biaya Satuan
+                    </span>
                     <span
                       className={cx(
-                        'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold',
-                        costStatB.isHigh ? 'bg-[#FBF1D6] text-[#7A5600]' : 'bg-[#E6F3EC] text-[#14633F]'
+                        "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold",
+                        costStatB.isHigh
+                          ? "bg-[#FBF1D6] text-[#7A5600]"
+                          : "bg-[#E6F3EC] text-[#14633F]",
                       )}
                     >
-                      {costStatB.isHigh ? <AlertTriangle size={12} /> : <CheckCircle2 size={12} />}
-                      {costStatB.isHigh ? 'Di Atas Rata-rata' : 'Biaya Wajar'}
+                      {costStatB.isHigh ? (
+                        <AlertTriangle size={12} />
+                      ) : (
+                        <CheckCircle2 size={12} />
+                      )}
+                      {costStatB.isHigh ? "Di Atas Rata-rata" : "Biaya Wajar"}
                     </span>
                   </div>
                   <div className="mt-1 text-xl font-extrabold text-ink">
-                    {rupiahShort(costStatB.costPerKm)} <span className="text-xs font-normal text-sub">/ km</span>
+                    {rupiahShort(costStatB.costPerKm)}{" "}
+                    <span className="text-xs font-normal text-sub">/ km</span>
                   </div>
                   <p className="mt-1 text-xs text-sub">
-                    Panjang fisik {pB.km} km ({costStatB.isHigh ? `+${costStatB.diffPct}% vs acuan` : 'sesuai acuan daerah'})
+                    Panjang fisik {pB.km} km (
+                    {costStatB.isHigh
+                      ? `+${costStatB.diffPct}% vs acuan`
+                      : "sesuai acuan daerah"}
+                    )
                   </p>
                 </div>
               </div>
@@ -368,16 +470,30 @@ export default function Bandingkan({
               {/* Kolom A */}
               <div className="space-y-3.5 md:pr-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-brand uppercase tracking-wider truncate mr-2">Indikator: {pA.name}</span>
+                  <span className="text-xs font-bold text-brand uppercase tracking-wider truncate mr-2">
+                    Indikator: {pA.name}
+                  </span>
                   <span className="inline-flex items-center gap-1 shrink-0 rounded-full bg-brand/10 text-brand px-2 py-0.5 text-[11px] font-bold">
                     <span>{metaA.icon}</span>
                     <span>{metaA.label}</span>
                   </span>
                 </div>
                 {pA.stats?.map((s, idx) => (
-                  <div key={idx} className="flex items-center justify-between rounded-xl bg-canvas p-3 border border-line">
-                    <span className="text-xs font-semibold text-sub">{s.label}</span>
-                    <span className={cx("text-base font-extrabold", idx === 0 ? "text-bad" : "text-ink")}>{s.value}</span>
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between rounded-xl bg-canvas p-3 border border-line"
+                  >
+                    <span className="text-xs font-semibold text-sub">
+                      {s.label}
+                    </span>
+                    <span
+                      className={cx(
+                        "text-base font-extrabold",
+                        idx === 0 ? "text-bad" : "text-ink",
+                      )}
+                    >
+                      {s.value}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -385,16 +501,30 @@ export default function Bandingkan({
               {/* Kolom B */}
               <div className="space-y-3.5 pt-6 md:pt-0 md:pl-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-[#A22920] uppercase tracking-wider truncate mr-2">Indikator: {pB.name}</span>
+                  <span className="text-xs font-bold text-[#A22920] uppercase tracking-wider truncate mr-2">
+                    Indikator: {pB.name}
+                  </span>
                   <span className="inline-flex items-center gap-1 shrink-0 rounded-full bg-[#A22920]/10 text-[#A22920] px-2 py-0.5 text-[11px] font-bold">
                     <span>{metaB.icon}</span>
                     <span>{metaB.label}</span>
                   </span>
                 </div>
                 {pB.stats?.map((s, idx) => (
-                  <div key={idx} className="flex items-center justify-between rounded-xl bg-canvas p-3 border border-line">
-                    <span className="text-xs font-semibold text-sub">{s.label}</span>
-                    <span className={cx("text-base font-extrabold", idx === 0 ? "text-bad" : "text-ink")}>{s.value}</span>
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between rounded-xl bg-canvas p-3 border border-line"
+                  >
+                    <span className="text-xs font-semibold text-sub">
+                      {s.label}
+                    </span>
+                    <span
+                      className={cx(
+                        "text-base font-extrabold",
+                        idx === 0 ? "text-bad" : "text-ink",
+                      )}
+                    >
+                      {s.value}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -417,23 +547,37 @@ export default function Bandingkan({
               <div className="space-y-4 md:pr-6">
                 <div>
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-sub font-semibold">Kontraktor Pelaksana</span>
-                    <span className="font-bold text-brand">{pA.contractor}</span>
+                    <span className="text-sub font-semibold">
+                      Kontraktor Pelaksana
+                    </span>
+                    <span className="font-bold text-brand">
+                      {pA.contractor}
+                    </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between">
                     <div>
-                      <span className="text-3xl font-extrabold text-ink">{pA.progress}%</span>
+                      <span className="text-3xl font-extrabold text-ink">
+                        {pA.progress}%
+                      </span>
                       <span className="text-xs text-sub ml-1.5">progres</span>
                     </div>
-                    <div className="text-xs text-sub">Waktu: {pA.elapsed}% ({pA.sisa} hari sisa)</div>
+                    <div className="text-xs text-sub">
+                      Waktu: {pA.elapsed}% ({pA.sisa} hari sisa)
+                    </div>
                   </div>
                   <div className="mt-3">
-                    <ProgressBar value={pA.progress} elapsed={pA.elapsed} status={pA.status} />
+                    <ProgressBar
+                      value={pA.progress}
+                      elapsed={pA.elapsed}
+                      status={pA.status}
+                    />
                   </div>
                 </div>
 
                 <div className="flex justify-between items-center pt-2">
-                  <span className="text-xs text-sub">Target Tenggat: {pA.end}</span>
+                  <span className="text-xs text-sub">
+                    Target Tenggat: {pA.end}
+                  </span>
                   {onSelectProject && (
                     <Button
                       variant="secondary"
@@ -452,23 +596,37 @@ export default function Bandingkan({
               <div className="space-y-4 pt-6 md:pt-0 md:pl-6">
                 <div>
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-sub font-semibold">Kontraktor Pelaksana</span>
-                    <span className="font-bold text-[#A22920]">{pB.contractor}</span>
+                    <span className="text-sub font-semibold">
+                      Kontraktor Pelaksana
+                    </span>
+                    <span className="font-bold text-[#A22920]">
+                      {pB.contractor}
+                    </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between">
                     <div>
-                      <span className="text-3xl font-extrabold text-ink">{pB.progress}%</span>
+                      <span className="text-3xl font-extrabold text-ink">
+                        {pB.progress}%
+                      </span>
                       <span className="text-xs text-sub ml-1.5">progres</span>
                     </div>
-                    <div className="text-xs text-sub">Waktu: {pB.elapsed}% ({pB.sisa} hari sisa)</div>
+                    <div className="text-xs text-sub">
+                      Waktu: {pB.elapsed}% ({pB.sisa} hari sisa)
+                    </div>
                   </div>
                   <div className="mt-3">
-                    <ProgressBar value={pB.progress} elapsed={pB.elapsed} status={pB.status} />
+                    <ProgressBar
+                      value={pB.progress}
+                      elapsed={pB.elapsed}
+                      status={pB.status}
+                    />
                   </div>
                 </div>
 
                 <div className="flex justify-between items-center pt-2">
-                  <span className="text-xs text-sub">Target Tenggat: {pB.end}</span>
+                  <span className="text-xs text-sub">
+                    Target Tenggat: {pB.end}
+                  </span>
                   {onSelectProject && (
                     <Button
                       variant="secondary"

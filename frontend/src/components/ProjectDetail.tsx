@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import type { ReactNode } from 'react'
+import { useEffect, useState } from "react"
+import type { ReactNode } from "react"
 import {
   AlertTriangle,
   ArrowRight,
@@ -21,7 +21,7 @@ import {
   ThumbsDown,
   ThumbsUp,
   X,
-} from 'lucide-react'
+} from "lucide-react"
 import {
   DISCLAIMER,
   calcUrgencyScore,
@@ -32,61 +32,83 @@ import {
   num,
   projects as defaultProjects,
   rupiahShort,
-} from '../data'
-import type { Project } from '../data'
-import { Button, DataTag, ProgressBar, Skeleton, StatTile, StatusChip, cx, useToast } from './ui'
-import { ReportFeed } from './CekLapangan'
+} from "../data"
+import type { Project } from "../data"
+import {
+  Button,
+  DataTag,
+  ProgressBar,
+  Skeleton,
+  StatTile,
+  StatusChip,
+  cx,
+  useToast,
+} from "./ui"
+import { ReportFeed } from "./CekLapangan"
 
-type Profil = 'motor' | 'rumah' | 'kopi'
-const PROFIL: Record<
-  Profil,
-  { icon: typeof Motorbike; rate: number; unit: string; label: string; lead: string; tail: string; sub: string }
-> = {
+type Profil = "motor" | "rumah" | "kopi"
+const PROFIL: Record<Profil, {
+  icon: typeof Motorbike
+  rate: number
+  unit: string
+  label: string
+  lead: string
+  tail: string
+  sub: string
+}> = {
   motor: {
     icon: Motorbike,
     rate: 512000,
-    unit: 'pengendara',
-    label: 'Motor',
-    lead: 'Setara patungan pajak STNK motor dari',
-    tail: 'pengendara motor',
-    sub: 'Asumsi rata-rata PKB Rp 512.000 / tahun',
+    unit: "pengendara",
+    label: "Motor",
+    lead: "Setara patungan pajak STNK motor dari",
+    tail: "pengendara motor",
+    sub: "Asumsi rata-rata PKB Rp 512.000 / tahun",
   },
   rumah: {
     icon: Home,
     rate: 640000,
-    unit: 'rumah',
-    label: 'PBB Rumah',
-    lead: 'Setara patungan PBB tahunan dari',
-    tail: 'pemilik rumah warga',
-    sub: 'Asumsi rata-rata PBB Rp 640.000 / tahun',
+    unit: "rumah",
+    label: "PBB Rumah",
+    lead: "Setara patungan PBB tahunan dari",
+    tail: "pemilik rumah warga",
+    sub: "Asumsi rata-rata PBB Rp 640.000 / tahun",
   },
   kopi: {
     icon: Coffee,
     rate: 2800,
-    unit: 'pesanan',
-    label: 'Kopi / Resto',
-    lead: 'Setara pajak makan & ngopi (PB1 10%) dari',
-    tail: 'gelas kopi / makanan',
-    sub: 'Pajak restoran 10% (± Rp 2.800 / pesanan)',
+    unit: "pesanan",
+    label: "Kopi / Resto",
+    lead: "Setara pajak makan & ngopi (PB1 10%) dari",
+    tail: "gelas kopi / makanan",
+    sub: "Pajak restoran 10% (± Rp 2.800 / pesanan)",
   },
 }
 
 function getProjectImage(p: Project): string {
   const name = p.name.toLowerCase()
-  if (name.includes('jembatan')) {
-    return 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=800&q=80'
+  if (name.includes("jembatan")) {
+    return "https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=800&q=80"
   }
-  if (name.includes('drainase') || name.includes('saluran') || name.includes('embung')) {
-    return 'https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?auto=format&fit=crop&w=800&q=80'
+  if (
+    name.includes("drainase") ||
+    name.includes("saluran") ||
+    name.includes("embung")
+  ) {
+    return "https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?auto=format&fit=crop&w=800&q=80"
   }
-  if (name.includes('penerangan') || name.includes('lampu')) {
-    return 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=800&q=80'
+  if (name.includes("penerangan") || name.includes("lampu")) {
+    return "https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&w=800&q=80"
   }
-  if (name.includes('pasar') || name.includes('gedung') || name.includes('alun-alun')) {
-    return 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80'
+  if (
+    name.includes("pasar") ||
+    name.includes("gedung") ||
+    name.includes("alun-alun")
+  ) {
+    return "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80"
   }
   // Default road & highway infrastructure
-  return 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=800&q=80'
+  return "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=800&q=80"
 }
 
 function SectionLabel({ n, title }: { n: string; title: string }) {
@@ -95,14 +117,26 @@ function SectionLabel({ n, title }: { n: string; title: string }) {
       <span className="flex size-6 items-center justify-center rounded-full bg-canvas border border-line text-xs font-bold text-ink shadow-xs">
         {n}
       </span>
-      <h3 className="text-xs font-bold uppercase tracking-wider text-ink">{title}</h3>
+      <h3 className="text-xs font-bold uppercase tracking-wider text-ink">
+        {title}
+      </h3>
     </div>
   )
 }
 
-function Meta({ icon, label, children, wide }: { icon: ReactNode; label: string; children: ReactNode; wide?: boolean }) {
+function Meta({
+  icon,
+  label,
+  children,
+  wide,
+}: {
+  icon: ReactNode
+  label: string
+  children: ReactNode
+  wide?: boolean
+}) {
   return (
-    <div className={wide ? 'col-span-2' : ''}>
+    <div className={wide ? "col-span-2" : ""}>
       <dt className="flex items-center gap-1.5 text-xs text-sub">
         {icon}
         {label}
@@ -114,7 +148,11 @@ function Meta({ icon, label, children, wide }: { icon: ReactNode; label: string;
 
 function DetailSkeleton() {
   return (
-    <div className="space-y-4 p-4" aria-busy="true" aria-label="Memuat detail proyek">
+    <div
+      className="space-y-4 p-4"
+      aria-busy="true"
+      aria-label="Memuat detail proyek"
+    >
       <Skeleton className="h-44 w-full rounded-2xl" />
       <Skeleton className="h-32 w-full rounded-2xl" />
       <Skeleton className="h-48 w-full rounded-2xl" />
@@ -148,7 +186,7 @@ export default function ProjectDetail({
   const apbdAmt = (p.cost * p.apbd) / 100
   const apbnAmt = p.cost - apbdAmt
   const faster = p.progress - p.elapsed
-  const [profil, setProfil] = useState<Profil>('motor')
+  const [profil, setProfil] = useState<Profil>("motor")
   const prof = PROFIL[profil]
   const ProfIcon = prof.icon
 
@@ -158,21 +196,32 @@ export default function ProjectDetail({
   const benchmark = getCostPerKmBenchmark(defaultProjects)
   const costEval = evaluateCostPerKm(p, benchmark.median)
 
-  const accurateCount = p.reports.filter((r) => r.verdict === 'sesuai').length
-  const inaccurateCount = p.reports.filter((r) => r.verdict === 'tidak').length
+  const accurateCount = p.reports.filter((r) => r.verdict === "sesuai").length
+  const inaccurateCount = p.reports.filter((r) => r.verdict === "tidak").length
   const totalVotes = accurateCount + inaccurateCount
-  const accuratePct = totalVotes ? Math.round((accurateCount / totalVotes) * 100) : 50
+  const accuratePct = totalVotes
+    ? Math.round((accurateCount / totalVotes) * 100)
+    : 50
 
   const download = () => {
-    const blob = new Blob([JSON.stringify({ ...p, reports: undefined, catatan: 'Data contoh PajakPeta' }, null, 2)], {
-      type: 'application/json',
-    })
-    const a = document.createElement('a')
+    const blob = new Blob(
+      [
+        JSON.stringify(
+          { ...p, reports: undefined, catatan: "Data contoh PajakPeta" },
+          null,
+          2,
+        ),
+      ],
+      {
+        type: "application/json",
+      },
+    )
+    const a = document.createElement("a")
     a.href = URL.createObjectURL(blob)
     a.download = `${p.id}.json`
     a.click()
     URL.revokeObjectURL(a.href)
-    toast('Data proyek diunduh')
+    toast("Data proyek diunduh")
   }
 
   const projectImg = getProjectImage(p)
@@ -187,7 +236,7 @@ export default function ProjectDetail({
             alt={p.name}
             className="size-full object-cover"
             onError={(e) => {
-              ;(e.target as HTMLElement).style.display = 'none'
+              ;(e.target as HTMLElement).style.display = "none"
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/15 pointer-events-none" />
@@ -213,7 +262,7 @@ export default function ProjectDetail({
             </div>
             <span className="inline-flex items-center gap-1 rounded-full bg-black/40 px-2.5 py-1 text-xs font-semibold text-white/90 backdrop-blur-md">
               <MapPin size={12} />
-              <span>{p.loc.split(',')[0]}</span>
+              <span>{p.loc.split(",")[0]}</span>
             </span>
           </div>
         </div>
@@ -222,8 +271,12 @@ export default function ProjectDetail({
         <div className="mx-4 mt-3 rounded-2xl border border-line bg-surface p-5 shadow-card">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-brand">{p.contractor}</span>
-              <h2 className="mt-1 text-lg font-bold leading-snug text-ink">{p.name}</h2>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-brand">
+                {p.contractor}
+              </span>
+              <h2 className="mt-1 text-lg font-bold leading-snug text-ink">
+                {p.name}
+              </h2>
               <p className="mt-1 flex items-center gap-1.5 text-xs text-sub">
                 <MapPin size={13} className="shrink-0 text-sub" aria-hidden />
                 <span>{p.loc}</span>
@@ -235,7 +288,10 @@ export default function ProjectDetail({
           {/* Quick Urgency Badge & Compare Button */}
           <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-line/60 pt-3">
             <div className="inline-flex items-center gap-1.5 rounded-full bg-[#F4F9F8] border border-brand/20 px-2.5 py-0.5 text-xs font-bold text-brand">
-              <Flame size={13} className={urgency >= 70 ? 'text-[#1F8A5B]' : 'text-[#D99A00]'} />
+              <Flame
+                size={13}
+                className={urgency >= 70 ? "text-[#1F8A5B]" : "text-[#D99A00]"}
+              />
               <span>Skor Urgensi: {urgency}/100</span>
             </div>
 
@@ -255,8 +311,8 @@ export default function ProjectDetail({
             <div className="mt-3.5 flex items-start gap-2.5 rounded-xl border border-dashed border-bad/50 bg-[#FDEEEB] p-3 text-xs leading-relaxed text-[#8F251D]">
               <AlertTriangle size={16} className="mt-0.5 shrink-0 text-bad" />
               <span>
-                <strong>Perlu Dicek Warga:</strong> Ada laporan warga bahwa kondisi fisik di lapangan tidak sesuai klaim
-                progres dinas.
+                <strong>Perlu Dicek Warga:</strong> Ada laporan warga bahwa
+                kondisi fisik di lapangan tidak sesuai klaim progres dinas.
               </span>
             </div>
           )}
@@ -272,14 +328,20 @@ export default function ProjectDetail({
               {/* Kotak Perbandingan Progres Fisik vs Waktu Berjalan */}
               <div className="rounded-xl border border-line bg-canvas/70 p-4 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-wider text-sub">Status Pengerjaan</span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-sub">
+                    Status Pengerjaan
+                  </span>
                   <span
                     className={cx(
-                      'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold',
-                      faster >= 0 ? 'bg-[#E6F3EC] text-[#14633F]' : 'bg-[#FBE9E7] text-[#A22920]'
+                      "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold",
+                      faster >= 0
+                        ? "bg-[#E6F3EC] text-[#14633F]"
+                        : "bg-[#FBE9E7] text-[#A22920]",
                     )}
                   >
-                    {faster >= 0 ? `+${faster}% Di Depan Jadwal` : `${faster}% Di Belakang Jadwal`}
+                    {faster >= 0
+                      ? `+${faster}% Di Depan Jadwal`
+                      : `${faster}% Di Belakang Jadwal`}
                   </span>
                 </div>
 
@@ -287,32 +349,52 @@ export default function ProjectDetail({
                   <div>
                     <div className="text-xs text-sub">Realisasi Fisik</div>
                     <div className="mt-0.5 flex items-baseline gap-1.5">
-                      <span className="text-3xl font-extrabold tracking-tight text-ink">{p.progress}%</span>
+                      <span className="text-3xl font-extrabold tracking-tight text-ink">
+                        {p.progress}%
+                      </span>
                       <span className="text-xs text-sub">selesai</span>
                     </div>
                   </div>
                   <div className="pl-3">
                     <div className="text-xs text-sub">Waktu Berjalan</div>
                     <div className="mt-0.5 flex items-baseline gap-1.5">
-                      <span className="text-3xl font-extrabold tracking-tight text-sub">{p.elapsed}%</span>
-                      <span className="text-xs text-sub">({p.sisa} hari sisa)</span>
+                      <span className="text-3xl font-extrabold tracking-tight text-sub">
+                        {p.elapsed}%
+                      </span>
+                      <span className="text-xs text-sub">
+                        ({p.sisa} hari sisa)
+                      </span>
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-3.5">
-                  <ProgressBar value={p.progress} elapsed={p.elapsed} status={p.status} />
+                  <ProgressBar
+                    value={p.progress}
+                    elapsed={p.elapsed}
+                    status={p.status}
+                  />
                 </div>
               </div>
 
               <dl className="mt-4 grid grid-cols-2 gap-3 rounded-xl border border-line bg-surface p-3.5 text-sm shadow-xs">
-                <Meta wide icon={<HardHat size={14} className="text-brand" />} label="Kontraktor">
+                <Meta
+                  wide
+                  icon={<HardHat size={14} className="text-brand" />}
+                  label="Kontraktor"
+                >
                   {p.contractor}
                 </Meta>
-                <Meta icon={<CalendarDays size={14} className="text-brand" />} label="Mulai">
+                <Meta
+                  icon={<CalendarDays size={14} className="text-brand" />}
+                  label="Mulai"
+                >
                   {p.start}
                 </Meta>
-                <Meta icon={<CalendarDays size={14} className="text-brand" />} label="Target selesai">
+                <Meta
+                  icon={<CalendarDays size={14} className="text-brand" />}
+                  label="Target selesai"
+                >
                   {p.end}
                 </Meta>
               </dl>
@@ -323,7 +405,9 @@ export default function ProjectDetail({
               <SectionLabel n="B" title="Transparansi Anggaran" />
               <div className="flex items-baseline justify-between">
                 <div>
-                  <span className="text-xs text-sub block">Nilai Kontrak Total</span>
+                  <span className="text-xs text-sub block">
+                    Nilai Kontrak Total
+                  </span>
                   <div className="text-[28px] font-extrabold tracking-tight leading-tight text-ink">
                     {rupiahShort(p.cost)}
                   </div>
@@ -339,31 +423,46 @@ export default function ProjectDetail({
                 role="img"
                 aria-label={`Pajak warga lokal ${p.apbd}%, bantuan pusat ${100 - p.apbd}%`}
               >
-                <div className="bg-brand transition-all duration-300" style={{ width: `${p.apbd}%` }} />
+                <div
+                  className="bg-brand transition-all duration-300"
+                  style={{ width: `${p.apbd}%` }}
+                />
                 <div className="flex-1 bg-[#CBD5E1] transition-all duration-300" />
               </div>
 
               <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
                 <div className="rounded-lg border border-brand/20 bg-brand/5 p-2.5">
                   <span className="flex items-center gap-1.5 font-bold text-brand">
-                    <span className="size-2 rounded-full bg-brand" /> Kantong 1: Pajak Warga
+                    <span className="size-2 rounded-full bg-brand" /> Kantong 1:
+                    Pajak Warga
                   </span>
-                  <div className="mt-1 text-sm font-bold text-ink">{rupiahShort(apbdAmt)}</div>
-                  <div className="text-[11px] text-sub">PAD Daerah ({p.apbd}%)</div>
+                  <div className="mt-1 text-sm font-bold text-ink">
+                    {rupiahShort(apbdAmt)}
+                  </div>
+                  <div className="text-[11px] text-sub">
+                    PAD Daerah ({p.apbd}%)
+                  </div>
                 </div>
                 <div className="rounded-lg border border-line bg-canvas/60 p-2.5">
                   <span className="flex items-center gap-1.5 font-bold text-sub">
-                    <span className="size-2 rounded-full bg-[#CBD5E1]" /> Kantong 2: Bantuan Pusat
+                    <span className="size-2 rounded-full bg-[#CBD5E1]" />{" "}
+                    Kantong 2: Bantuan Pusat
                   </span>
-                  <div className="mt-1 text-sm font-bold text-ink">{rupiahShort(apbnAmt)}</div>
-                  <div className="text-[11px] text-sub">APBN / Transfer ({100 - p.apbd}%)</div>
+                  <div className="mt-1 text-sm font-bold text-ink">
+                    {rupiahShort(apbnAmt)}
+                  </div>
+                  <div className="text-[11px] text-sub">
+                    APBN / Transfer ({100 - p.apbd}%)
+                  </div>
                 </div>
               </div>
 
               {/* Interactive Multi-Analogi Card */}
               <div className="mt-5 rounded-xl border border-brand/20 bg-[#F4F9F8] p-4 shadow-xs">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-brand">Konversi Patungan Warga</span>
+                  <span className="text-xs font-bold uppercase tracking-wider text-brand">
+                    Konversi Patungan Warga
+                  </span>
                   <span className="text-[11px] text-sub">Pilih opsi</span>
                 </div>
 
@@ -377,8 +476,10 @@ export default function ProjectDetail({
                         key={key}
                         onClick={() => setProfil(key)}
                         className={cx(
-                          'flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-bold transition-all',
-                          isSelected ? 'bg-brand text-white shadow-xs' : 'text-sub hover:text-ink hover:bg-canvas'
+                          "flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-bold transition-all",
+                          isSelected
+                            ? "bg-brand text-white shadow-xs"
+                            : "text-sub hover:text-ink hover:bg-canvas",
                         )}
                       >
                         <Icon size={14} />
@@ -394,7 +495,7 @@ export default function ProjectDetail({
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm leading-snug text-ink">
-                      {prof.lead}{' '}
+                      {prof.lead}{" "}
                       <strong className="font-extrabold text-brand text-base">
                         {num(Math.round(apbdAmt / prof.rate))} {prof.tail}
                       </strong>
@@ -403,7 +504,8 @@ export default function ProjectDetail({
                   </div>
                 </div>
                 <p className="mt-3 border-t border-brand/15 pt-2 text-[11px] leading-tight text-sub">
-                  Dihitung dari Kantong 1 ({rupiahShort(apbdAmt)}) ÷ Rp {num(prof.rate)}. {DISCLAIMER}
+                  Dihitung dari Kantong 1 ({rupiahShort(apbdAmt)}) ÷ Rp{" "}
+                  {num(prof.rate)}. {DISCLAIMER}
                 </p>
               </div>
 
@@ -423,12 +525,17 @@ export default function ProjectDetail({
                       <span className="text-xs font-bold uppercase tracking-wider text-ink block">
                         Telusuri Aliran Dana &amp; Harga Satuan
                       </span>
-                      <span className="text-[11px] text-sub">Jejak rupiah dari kas daerah ke lapangan</span>
+                      <span className="text-[11px] text-sub">
+                        Jejak rupiah dari kas daerah ke lapangan
+                      </span>
                     </div>
                   </div>
                   <ChevronDown
                     size={18}
-                    className={cx('text-sub transition-transform duration-200', showAlurDana && 'rotate-180')}
+                    className={cx(
+                      "text-sub transition-transform duration-200",
+                      showAlurDana && "rotate-180",
+                    )}
                   />
                 </button>
 
@@ -447,9 +554,13 @@ export default function ProjectDetail({
                             1
                           </span>
                           <div className="min-w-0 flex-1 rounded-lg border border-line bg-surface p-2.5 text-xs shadow-xs">
-                            <div className="font-bold text-ink">Kas Pajak Warga &amp; Transfer Pusat</div>
+                            <div className="font-bold text-ink">
+                              Kas Pajak Warga &amp; Transfer Pusat
+                            </div>
                             <div className="mt-0.5 text-sub text-[11px]">
-                              APBD (PAD {p.apbd}% • {rupiahShort(apbdAmt)}) + Bantuan Pusat ({100 - p.apbd}% • {rupiahShort(apbnAmt)})
+                              APBD (PAD {p.apbd}% • {rupiahShort(apbdAmt)}) +
+                              Bantuan Pusat ({100 - p.apbd}% •{" "}
+                              {rupiahShort(apbnAmt)})
                             </div>
                           </div>
                         </div>
@@ -460,9 +571,12 @@ export default function ProjectDetail({
                             2
                           </span>
                           <div className="min-w-0 flex-1 rounded-lg border border-line bg-surface p-2.5 text-xs shadow-xs">
-                            <div className="font-bold text-ink">Dinas PU Bina Marga &amp; SDA Sidoarjo</div>
+                            <div className="font-bold text-ink">
+                              Dinas PU Bina Marga &amp; SDA Sidoarjo
+                            </div>
                             <div className="mt-0.5 text-sub text-[11px]">
-                              Verifikasi RAB, Kuasa Pengguna Anggaran (KPA), &amp; Pengawas Teknis
+                              Verifikasi RAB, Kuasa Pengguna Anggaran (KPA),
+                              &amp; Pengawas Teknis
                             </div>
                           </div>
                         </div>
@@ -473,9 +587,12 @@ export default function ProjectDetail({
                             3
                           </span>
                           <div className="min-w-0 flex-1 rounded-lg border border-line bg-surface p-2.5 text-xs shadow-xs">
-                            <div className="font-bold text-ink">{p.contractor}</div>
+                            <div className="font-bold text-ink">
+                              {p.contractor}
+                            </div>
                             <div className="mt-0.5 text-sub text-[11px]">
-                              Penyedia jasa pemenang lelang resmi tender LPSE Kab. Sidoarjo
+                              Penyedia jasa pemenang lelang resmi tender LPSE
+                              Kab. Sidoarjo
                             </div>
                           </div>
                         </div>
@@ -486,9 +603,12 @@ export default function ProjectDetail({
                             4
                           </span>
                           <div className="min-w-0 flex-1 rounded-lg border border-brand/30 bg-[#EAF2F1] p-2.5 text-xs shadow-xs">
-                            <div className="font-bold text-brand">Output Fisik: Sepanjang {p.km} km</div>
+                            <div className="font-bold text-brand">
+                              Output Fisik: Sepanjang {p.km} km
+                            </div>
                             <div className="mt-0.5 text-[#14633F] text-[11px]">
-                              Realisasi fisik saat ini {p.progress}%, target selesai {p.end}
+                              Realisasi fisik saat ini {p.progress}%, target
+                              selesai {p.end}
                             </div>
                           </div>
                         </div>
@@ -504,28 +624,42 @@ export default function ProjectDetail({
                       <div className="rounded-xl border border-line bg-surface p-3.5 space-y-2.5 shadow-xs">
                         <div className="flex items-baseline justify-between">
                           <div>
-                            <span className="text-xs text-sub">Biaya per Kilometer:</span>
-                            <div className="text-xl font-extrabold text-ink">{rupiahShort(costEval.costPerKm)} / km</div>
+                            <span className="text-xs text-sub">
+                              Biaya per Kilometer:
+                            </span>
+                            <div className="text-xl font-extrabold text-ink">
+                              {rupiahShort(costEval.costPerKm)} / km
+                            </div>
                           </div>
                           <div className="text-right">
-                            <span className="text-[11px] text-sub">Median Sidoarjo:</span>
-                            <div className="text-xs font-bold text-sub">{rupiahShort(benchmark.median)} / km</div>
+                            <span className="text-[11px] text-sub">
+                              Median Sidoarjo:
+                            </span>
+                            <div className="text-xs font-bold text-sub">
+                              {rupiahShort(benchmark.median)} / km
+                            </div>
                           </div>
                         </div>
 
                         {/* Status Badge */}
                         <div
                           className={cx(
-                            'flex items-start gap-2 rounded-lg p-2.5 text-xs leading-snug font-medium',
+                            "flex items-start gap-2 rounded-lg p-2.5 text-xs leading-snug font-medium",
                             costEval.isHigh
-                              ? 'border border-[#E2B93B]/40 bg-[#FBF1D6] text-[#7A5600]'
-                              : 'border border-[#34D399]/40 bg-[#E6F3EC] text-[#14633F]'
+                              ? "border border-[#E2B93B]/40 bg-[#FBF1D6] text-[#7A5600]"
+                              : "border border-[#34D399]/40 bg-[#E6F3EC] text-[#14633F]",
                           )}
                         >
                           {costEval.isHigh ? (
-                            <AlertTriangle size={15} className="mt-0.5 shrink-0 text-[#D99A00]" />
+                            <AlertTriangle
+                              size={15}
+                              className="mt-0.5 shrink-0 text-[#D99A00]"
+                            />
                           ) : (
-                            <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-[#1F8A5B]" />
+                            <CheckCircle2
+                              size={15}
+                              className="mt-0.5 shrink-0 text-[#1F8A5B]"
+                            />
                           )}
                           <span>{costEval.label}</span>
                         </div>
@@ -534,19 +668,27 @@ export default function ProjectDetail({
                         <div className="space-y-1 pt-1">
                           <div className="flex justify-between text-[11px] text-sub">
                             <span>Panjang {p.km} km</span>
-                            <span>{Math.round(costEval.ratio * 100)}% dari median</span>
+                            <span>
+                              {Math.round(costEval.ratio * 100)}% dari median
+                            </span>
                           </div>
                           <div className="flex h-2 w-full overflow-hidden rounded-full bg-line/60">
                             <div
                               className={cx(
-                                'h-full transition-all duration-300',
-                                costEval.isHigh ? 'bg-[#D99A00]' : 'bg-[#1F8A5B]'
+                                "h-full transition-all duration-300",
+                                costEval.isHigh
+                                  ? "bg-[#D99A00]"
+                                  : "bg-[#1F8A5B]",
                               )}
-                              style={{ width: `${Math.min(100, Math.round(costEval.ratio * 50))}%` }}
+                              style={{
+                                width: `${Math.min(100, Math.round(costEval.ratio * 50))}%`,
+                              }}
                             />
                           </div>
                           <p className="text-[10px] text-sub leading-tight">
-                            Nilai wajar dihitung dari median proyek jalan di Kab. Sidoarjo. Variasi biaya dipengaruhi ketebalan cor beton vs aspal serta kondisi drainase tepi.
+                            Nilai wajar dihitung dari median proyek jalan di
+                            Kab. Sidoarjo. Variasi biaya dipengaruhi ketebalan
+                            cor beton vs aspal serta kondisi drainase tepi.
                           </p>
                         </div>
                       </div>
@@ -561,31 +703,31 @@ export default function ProjectDetail({
               <SectionLabel
                 n="C"
                 title={
-                  category === 'bangunan'
-                    ? 'Statistik Fasilitas & Pengunjung'
-                    : category === 'drainase'
-                    ? 'Statistik Genangan & Pengendali Banjir'
-                    : category === 'jembatan'
-                    ? 'Statistik Teknis Jembatan'
-                    : category === 'pju'
-                    ? 'Statistik Penerangan & Keamanan'
-                    : category === 'trotoar'
-                    ? 'Statistik Pedestrian & Pejalan Kaki'
-                    : 'Statistik Daerah'
+                  category === "bangunan"
+                    ? "Statistik Fasilitas & Pengunjung"
+                    : category === "drainase"
+                      ? "Statistik Genangan & Pengendali Banjir"
+                      : category === "jembatan"
+                        ? "Statistik Teknis Jembatan"
+                        : category === "pju"
+                          ? "Statistik Penerangan & Keamanan"
+                          : category === "trotoar"
+                            ? "Statistik Pedestrian & Pejalan Kaki"
+                            : "Statistik Daerah"
                 }
               />
               <p className="-mt-2 mb-4 text-xs text-sub">
-                {category === 'bangunan'
-                  ? 'Kebutuhan revitalisasi ruang publik & fasilitas harian warga Sidoarjo'
-                  : category === 'drainase'
-                  ? 'Frekuensi banjir genangan & dampaknya terhadap pemukiman warga'
-                  : category === 'jembatan'
-                  ? 'Beban kendaraan harian & kondisi struktur jembatan penghubung'
-                  : category === 'pju'
-                  ? 'Tingkat kegelapan ruas jalan & kerawanan keselamatan di malam hari'
-                  : category === 'trotoar'
-                  ? 'Aksesibilitas fasilitas pejalan kaki & penataan ruang pejalan'
-                  : 'Kenapa proyek ini diprioritaskan untuk dibangun?'}
+                {category === "bangunan"
+                  ? "Kebutuhan revitalisasi ruang publik & fasilitas harian warga Sidoarjo"
+                  : category === "drainase"
+                    ? "Frekuensi banjir genangan & dampaknya terhadap pemukiman warga"
+                    : category === "jembatan"
+                      ? "Beban kendaraan harian & kondisi struktur jembatan penghubung"
+                      : category === "pju"
+                        ? "Tingkat kegelapan ruas jalan & kerawanan keselamatan di malam hari"
+                        : category === "trotoar"
+                          ? "Aksesibilitas fasilitas pejalan kaki & penataan ruang pejalan"
+                          : "Kenapa proyek ini diprioritaskan untuk dibangun?"}
               </p>
               <div className="grid grid-cols-3 gap-2">
                 {p.stats.map((s) => (
@@ -597,22 +739,29 @@ export default function ProjectDetail({
               <div className="mt-4 rounded-xl border border-line bg-canvas/70 p-3.5 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-surface border border-line text-brand shadow-xs">
-                    <Flame size={18} className={urgency >= 70 ? 'text-[#1F8A5B]' : 'text-[#D99A00]'} />
+                    <Flame
+                      size={18}
+                      className={
+                        urgency >= 70 ? "text-[#1F8A5B]" : "text-[#D99A00]"
+                      }
+                    />
                   </span>
                   <div className="min-w-0">
-                    <div className="text-xs font-bold text-ink">Indeks Urgensi Lapangan: {urgency}/100</div>
+                    <div className="text-xs font-bold text-ink">
+                      Indeks Urgensi Lapangan: {urgency}/100
+                    </div>
                     <div className="text-[11px] text-sub truncate">
-                      {category === 'bangunan'
-                        ? 'Dihitung dari kepadatan pengunjung, kerusakan fasilitas, & laporan keluhan'
-                        : category === 'drainase'
-                        ? 'Dihitung dari frekuensi genangan, tinggi air banjir, & warga terdampak'
-                        : category === 'jembatan'
-                        ? 'Dihitung dari volume kendaraan, titik retak struktur, & usia jembatan'
-                        : category === 'pju'
-                        ? 'Dihitung dari titik lampu mati, kerawanan malam, & volume pengguna jalan'
-                        : category === 'trotoar'
-                        ? 'Dihitung dari pejalan kaki, titik trotoar rusak, & hambatan akses'
-                        : 'Dihitung dari riwayat kecelakaan, titik lubang, & traffic'}
+                      {category === "bangunan"
+                        ? "Dihitung dari kepadatan pengunjung, kerusakan fasilitas, & laporan keluhan"
+                        : category === "drainase"
+                          ? "Dihitung dari frekuensi genangan, tinggi air banjir, & warga terdampak"
+                          : category === "jembatan"
+                            ? "Dihitung dari volume kendaraan, titik retak struktur, & usia jembatan"
+                            : category === "pju"
+                              ? "Dihitung dari titik lampu mati, kerawanan malam, & volume pengguna jalan"
+                              : category === "trotoar"
+                                ? "Dihitung dari pejalan kaki, titik trotoar rusak, & hambatan akses"
+                                : "Dihitung dari riwayat kecelakaan, titik lubang, & traffic"}
                     </div>
                   </div>
                 </div>
@@ -629,7 +778,9 @@ export default function ProjectDetail({
                 )}
               </div>
 
-              <p className="mt-3 text-[11px] text-sub">Sumber: Agregasi data statistik daerah Sidoarjo (Data contoh).</p>
+              <p className="mt-3 text-[11px] text-sub">
+                Sumber: Agregasi data statistik daerah Sidoarjo (Data contoh).
+              </p>
             </section>
 
             {/* Card D: Pantauan Warga Sekitar (Laporan & Foto Warga) */}
@@ -645,7 +796,8 @@ export default function ProjectDetail({
               <div className="mb-4 rounded-xl border border-line bg-canvas/70 p-3.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="flex items-center gap-1 font-bold text-[#14633F]">
-                    <ThumbsUp size={13} /> {accurateCount} Warga Menyatakan Sesuai
+                    <ThumbsUp size={13} /> {accurateCount} Warga Menyatakan
+                    Sesuai
                   </span>
                   <span className="flex items-center gap-1 font-bold text-bad">
                     <ThumbsDown size={13} /> {inaccurateCount} Tidak Sesuai
