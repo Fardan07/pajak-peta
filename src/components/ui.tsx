@@ -7,13 +7,16 @@ import type { Status } from '../data'
 export const cx = (...a: (string | false | null | undefined)[]) => a.filter(Boolean).join(' ')
 
 /* ---------- Brand ---------- */
-export function BrandMark({ size = 32, dark = false }: { size?: number; dark?: boolean }) {
+export function BrandMark({ size = 42, dark = false, className = '' }: { size?: number; dark?: boolean; className?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden>
-      <rect width="32" height="32" rx="8" fill={dark ? '#FAF8F4' : '#0F5C5C'} />
-      <path d="M9 24 L13 8 H19 L23 24" fill="none" stroke={dark ? '#0F5C5C' : '#fff'} strokeWidth="1.8" strokeLinejoin="round" />
-      <path d="M16 11v3M16 17v3" stroke={dark ? '#0F5C5C' : '#fff'} strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
+    <img
+      src="/logo-icon.png"
+      alt="Logo Pajak Peta"
+      width={size}
+      height={size}
+      className={cx('object-contain shrink-0 border-2 border-green-100 rounded', dark ? 'bg-white p-0.5' : '', className)}
+      style={{ width: size, height: size }}
+    />
   )
 }
 
@@ -240,7 +243,7 @@ export function Accordion({ title, children, defaultOpen = false }: { title: str
 
 /* ---------- Toast ---------- */
 type ToastKind = 'ok' | 'error'
-const ToastCtx = createContext<(msg: string, kind?: ToastKind) => void>(() => {})
+const ToastCtx = createContext<(msg: string, kind?: ToastKind) => void>(() => { })
 export const useToast = () => useContext(ToastCtx)
 
 export function Toast({ msg, kind = 'ok', onClose }: { msg: string; kind?: ToastKind; onClose?: () => void }) {

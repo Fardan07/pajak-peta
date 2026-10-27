@@ -105,7 +105,7 @@ function Shell() {
           className="flex items-center gap-2.5 rounded-lg text-left"
           aria-label={`${APP_NAME}, kembali ke beranda`}
         >
-          <BrandMark size={32} />
+          <BrandMark size={42} />
           <span className="flex flex-col items-start leading-none">
             <span className="text-xl font-bold tracking-tight text-ink">{APP_NAME}</span>
             <span className="mt-1 hidden text-xs font-medium text-sub sm:block">{TAGLINE}</span>
