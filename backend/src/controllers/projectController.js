@@ -16,7 +16,6 @@ function requireAdminPin(req, res, next) {
       message: 'PIN Otorisasi Dinas tidak valid. Silakan gunakan PIN Demo Juri: 2026.'
     });
   }
-  next;
   return next();
 }
 

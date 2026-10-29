@@ -86,7 +86,7 @@ function Field({
 }
 
 interface DompetProps {
-  onShare: () => void
+  onShare: (total: number) => void
   projects?: Project[]
 }
 
@@ -339,7 +339,7 @@ export default function Dompet({ onShare, projects = defaultProjects }: DompetPr
 
             {/* Tombol Aksi */}
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Button size="lg" icon={<Share2 size={18} />} className="flex-1 shadow-md shadow-brand/20 hover:shadow-lg transition-all" onClick={onShare}>
+              <Button size="lg" icon={<Share2 size={18} />} className="flex-1 shadow-md shadow-brand/20 hover:shadow-lg transition-all" onClick={() => onShare(t.total)}>
                 Bagikan Kartu Dampak
               </Button>
               <Button

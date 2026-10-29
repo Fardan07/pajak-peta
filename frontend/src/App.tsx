@@ -5,7 +5,7 @@ import CekLapangan from './components/CekLapangan'
 import MapPage from './components/MapPage'
 import type { Filter } from './components/MapControls'
 import { BrandMark, DataTag, ToastProvider, cx, useToast } from './components/ui'
-import { APP_NAME, TAGLINE, projects as initialProjects } from './data'
+import { APP_NAME, API_BASE, TAGLINE, projects as initialProjects } from './data'
 import type { Project, Report } from './data'
 import Bandingkan from './pages/Bandingkan'
 import Beranda from './pages/Beranda'
@@ -33,6 +33,7 @@ function Shell() {
   const [cekOpen, setCekOpen] = useState(false)
   const [adminModalOpen, setAdminModalOpen] = useState(false)
   const [compareAId, setCompareAId] = useState<string>('p1')
+  const [cardTotal, setCardTotal] = useState<number>(() => calcTax(5, 'motor_1', 'kos').total)
   const [, bump] = useState(0)
 
   const handleOpenCompare = (id: string) => {
@@ -45,7 +46,7 @@ function Shell() {
 
   // Fetch projects from backend Neon PostgreSQL on mount
   useEffect(() => {
-    fetch('http://localhost:5000/api/projects')
+    fetch(`${API_BASE}/api/projects`)
       .then((res) => res.json())
       .then((data) => {
         const arr: Project[] = Array.isArray(data) ? data : data.data
@@ -60,7 +61,6 @@ function Shell() {
 
   const selected = projectList.find((p) => p.id === selectedId) ?? null
   const active = page === 'kartu' ? 'dompet' : page
-  const total = calcTax(5, 'motor_1', 'kos').total
 
   const addReport = async (r: Report) => {
     if (!selected) return
@@ -83,7 +83,7 @@ function Shell() {
 
     // 2. Persist to Neon PostgreSQL Database
     try {
-      await fetch(`http://localhost:5000/api/projects/${selected.id}/reports`, {
+      const res = await fetch(`${API_BASE}/api/projects/${selected.id}/reports`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -92,8 +92,10 @@ function Shell() {
           photo: r.photo,
         }),
       })
+      if (!res.ok) throw new Error(`Server error (${res.status})`)
     } catch (err) {
       console.warn('Gagal menyimpan laporan ke backend Neon:', err)
+      toast('Laporan tampil di layar, tapi gagal tersimpan ke server. Coba lagi nanti.')
     }
   }
 
@@ -171,8 +173,16 @@ function Shell() {
         />
       )}
 
-      {page === 'dompet' && <Dompet onShare={() => setPage('kartu')} projects={projectList} />}
-      {page === 'kartu' && <Kartu total={total} onBack={() => setPage('dompet')} />}
+      {page === 'dompet' && (
+        <Dompet
+          onShare={(t) => {
+            setCardTotal(t)
+            setPage('kartu')
+          }}
+          projects={projectList}
+        />
+      )}
+      {page === 'kartu' && <Kartu total={cardTotal} onBack={() => setPage('dompet')} />}
       {page === 'bandingkan' && (
         <Bandingkan
           projects={projectList}

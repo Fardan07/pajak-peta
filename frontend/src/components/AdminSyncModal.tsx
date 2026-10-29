@@ -20,7 +20,6 @@ import {
 import { Button, StatusChip, cx, useToast } from './ui'
 import { rupiahShort } from '../data'
 import type { Project } from '../data'
-
 export interface AdminSyncModalProps {
   isOpen: boolean
   onClose: () => void
@@ -324,7 +323,7 @@ export default function AdminSyncModal({
         lng: item.lng,
       }))
 
-      const res = await fetch('http://localhost:5000/api/projects/bulk-sync', {
+      const res = await fetch(`${API_BASE}/api/projects/bulk-sync`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

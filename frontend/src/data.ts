@@ -2,6 +2,10 @@ export const APP_NAME = "PajakPeta"
 export const TAGLINE = "Telusuri Pajakmu, Pantau Wujudnya"
 export const APP_DOMAIN = "pajakpeta.id"
 
+// Base URL API backend. Dapat dioverride via VITE_API_URL saat build/deploy.
+export const API_BASE =
+  import.meta.env.VITE_API_URL ?? "http://localhost:5000"
+
 export type Status = "tepat" | "dekat" | "telat"
 
 export interface Report {

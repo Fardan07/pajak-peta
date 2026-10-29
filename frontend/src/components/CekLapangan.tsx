@@ -79,7 +79,7 @@ export default function CekLapangan({ p, onClose, onSubmit }: { p: Project; onCl
     }, 900)
   }
 
-  const reports = done ? p.reports : p.reports
+  const reports = p.reports
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-end justify-center bg-ink/45 animate-fade-in sm:items-center sm:p-6" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
