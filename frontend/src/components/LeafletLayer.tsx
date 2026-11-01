@@ -7,7 +7,7 @@ import type { Project } from '../data'
 import { Pin, cx } from './ui'
 import boundariesData from '../boundaries.json'
 
-const cartoKey = import.meta.env.VITE_CARTO_API_KEY || (typeof localStorage !== 'undefined' ? localStorage.getItem('carto_key') : '') || ''
+
 
 const TILES: Record<string, { url: string; attr: string }> = {
   roadmap: {

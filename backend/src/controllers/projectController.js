@@ -5,15 +5,18 @@ const mockProjects = require('../data/mockProjects');
 const { enrichProjectInput } = require('../utils/syncEngine');
 
 /**
- * Middleware: Verifikasi PIN Admin Dinas (Mode Demo Juri)
+ * Middleware: Verifikasi PIN Admin Dinas
+ * Menggunakan process.env.ADMIN_PIN (fallback ke default demo hanya jika belum diset)
+ * Tidak membocorkan nilai PIN pada pesan error response.
  */
 function requireAdminPin(req, res, next) {
-  const pin = req.headers['x-admin-pin'] || req.headers['x-pin'];
-  if (pin !== '2026') {
+  const expectedPin = process.env.ADMIN_PIN || '2026';
+  const pin = String(req.headers['x-admin-pin'] || req.headers['x-pin'] || '').trim();
+  if (!pin || pin !== expectedPin) {
     return res.status(401).json({
       success: false,
       error: 'Unauthorized',
-      message: 'PIN Otorisasi Dinas tidak valid. Silakan gunakan PIN Demo Juri: 2026.'
+      message: 'PIN Otorisasi Dinas tidak valid.'
     });
   }
   return next();
@@ -86,11 +89,10 @@ async function getProjectsFromSource() {
 async function getAllProjects(req, res) {
   try {
     const projects = await getProjectsFromSource();
-    // Return array directly matching frontend/src/data.ts projects format
     res.json(projects);
   } catch (err) {
-    console.error('Error in getAllProjects:', err);
-    res.status(500).json({ error: 'Gagal mengambil data proyek', message: err.message });
+    console.error('Error in getAllProjects:', err.message);
+    res.status(500).json({ error: 'Gagal mengambil data proyek' });
   }
 }
 
@@ -109,8 +111,8 @@ async function getProjectById(req, res) {
 
     res.json(project);
   } catch (err) {
-    console.error('Error in getProjectById:', err);
-    res.status(500).json({ error: 'Gagal mengambil detail proyek', message: err.message });
+    console.error('Error in getProjectById:', err.message);
+    res.status(500).json({ error: 'Gagal mengambil detail proyek' });
   }
 }
 
@@ -129,13 +131,20 @@ async function bulkSyncProjects(req, res) {
       });
     }
 
+    if (projects.length > 100) {
+      return res.status(400).json({
+        success: false,
+        error: 'Melebihi batas sinkronisasi',
+        message: 'Maksimal 100 proyek per proses sinkronisasi.'
+      });
+    }
+
     const existingProjects = await getProjectsFromSource();
     const assignedIds = new Set(existingProjects.map(p => p.id.toLowerCase()));
 
     let insertedCount = 0;
     let updatedCount = 0;
     const syncedIds = [];
-    const enrichedList = [];
 
     for (const row of projects) {
       const enriched = enrichProjectInput(row, existingProjects, assignedIds);
@@ -145,7 +154,6 @@ async function bulkSyncProjects(req, res) {
         insertedCount++;
       }
       syncedIds.push(enriched.id);
-      enrichedList.push(enriched);
 
       // 1. Coba simpan ke PostgreSQL Neon
       try {
@@ -255,11 +263,11 @@ async function bulkSyncProjects(req, res) {
       projects: freshProjects
     });
   } catch (err) {
-    console.error('Error in bulkSyncProjects:', err);
+    console.error('Error in bulkSyncProjects:', err.message);
     res.status(500).json({
       success: false,
       error: 'Gagal melakukan sinkronisasi proyek',
-      message: err.message
+      message: 'Terjadi kesalahan saat memproses data sinkronisasi.'
     });
   }
 }

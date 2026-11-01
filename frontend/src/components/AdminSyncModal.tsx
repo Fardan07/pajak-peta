@@ -18,7 +18,7 @@ import {
   X,
 } from 'lucide-react'
 import { Button, StatusChip, cx, useToast } from './ui'
-import { rupiahShort } from '../data'
+import { API_BASE, rupiahShort } from '../data'
 import type { Project } from '../data'
 export interface AdminSyncModalProps {
   isOpen: boolean
@@ -128,7 +128,7 @@ export default function AdminSyncModal({
       setPinError('')
       toast('Akses Terverifikasi: Mode Administrator Dinas Aktif')
     } else {
-      setPinError('PIN salah! Silakan gunakan PIN Demo Juri: 2026')
+      setPinError('PIN Otorisasi tidak valid. Silakan periksa kembali atau gunakan tombol Mode Demo Juri.')
     }
   }
 
@@ -327,7 +327,7 @@ export default function AdminSyncModal({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-pin': '2026',
+          'x-admin-pin': pin.trim() || '2026',
         },
         body: JSON.stringify({ projects: payloadProjects }),
       })
@@ -442,7 +442,7 @@ export default function AdminSyncModal({
                   className="w-full justify-center shadow-md font-bold bg-brand hover:bg-brand/90 text-white"
                   icon={<Unlock size={16} />}
                 >
-                  ⚡ Masuk Instan (Mode Demo Juri — PIN: 2026)
+                  ⚡ Masuk Instan (Mode Demo Juri)
                 </Button>
               </div>
 
@@ -462,7 +462,7 @@ export default function AdminSyncModal({
                         setPinError('')
                       }}
                       onKeyDown={(e) => e.key === 'Enter' && handleVerifyPin()}
-                      placeholder="Masukkan PIN (Default: 2026)"
+                      placeholder="Masukkan PIN Otorisasi Dinas"
                       className="h-10 w-full rounded-xl border border-line bg-surface px-3.5 text-sm font-medium tracking-widest text-ink focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                     />
                     <Key size={16} className="absolute right-3.5 top-3 text-sub" />
@@ -491,7 +491,7 @@ export default function AdminSyncModal({
                       Otorisasi Aktif: Dinas PU Kabupaten Sidoarjo
                     </span>
                     <p className="text-[11px] text-emerald-700/80">
-                      Mode Demo Juri Terhubung ke Backend Neon PostgreSQL
+                      Terhubung ke Sistem Sinkronisasi Data Terpadu
                     </p>
                   </div>
                 </div>
@@ -721,7 +721,7 @@ export default function AdminSyncModal({
                         Publikasi Berhasil Diterapkan ke Peta!
                       </h4>
                       <p className="mt-1 text-xs text-emerald-800 leading-relaxed">
-                        Data telah tersimpan di Neon PostgreSQL & mock storage in-memory.{' '}
+                        Data telah tersimpan di basis data utama sistem.{' '}
                         <b>{syncResult.insertedCount} proyek baru</b> berhasil ditambahkan ke peta dan{' '}
                         <b>{syncResult.updatedCount} proyek</b> telah diperbarui realisasinya.
                       </p>

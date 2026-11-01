@@ -7,13 +7,13 @@ import {
   Layers,
 } from "lucide-react"
 import { STATUS_META, projects } from "../data"
-import { FilterChips, FilterDropdown, SearchBox } from "./MapControls"
+import { FilterDropdown, SearchBox } from "./MapControls"
 import type { Filter } from "./MapControls"
 import type { Project } from "../data"
 import GoogleMapLayer from "./GoogleMapLayer"
 import LeafletLayer from "./LeafletLayer"
 import ProjectDetail from "./ProjectDetail"
-import { Button, DataTag, Segmented, StatusChip, cx } from "./ui"
+import { Segmented, StatusChip, cx } from "./ui"
 
 const SNAP = ["peek", "half", "full"] as const
 
@@ -38,13 +38,7 @@ export default function MapPage({
   setQ: (s: string) => void
   projects?: Project[]
 }) {
-  const [apiKey, setApiKey] = useState(
-    () =>
-      import.meta.env.VITE_GOOGLE_MAPS_API_KEY ||
-      localStorage.getItem("gmaps_key") ||
-      "",
-  )
-  const [draft, setDraft] = useState("")
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ""
   const [mapType, setMapType] = useState<"roadmap" | "osm" | "hybrid">(
     "roadmap",
   )
@@ -53,14 +47,6 @@ export default function MapPage({
   const [showBoundaries, setShowBoundaries] = useState(true)
   const [mapErr, setMapErr] = useState("")
   const live = !!apiKey && !mapErr
-  const saveKey = (k: string) => {
-    if (k) localStorage.setItem("gmaps_key", k)
-    else localStorage.removeItem("gmaps_key")
-    setMapErr("")
-    setApiKey(k)
-    setDraft("")
-    setPanel(false)
-  }
   const selected = allProjects.find((p) => p.id === selectedId) ?? null
 
   const list = useMemo(
@@ -203,15 +189,13 @@ export default function MapPage({
                 ]}
               />
               <p className="text-xs font-medium text-sub">
-                Mesin peta:{" "}
+                Mode tampilan:{" "}
                 <b className="text-ink">
-                  {live
-                    ? "Google Maps"
-                    : mapType === "osm"
-                      ? "Esri Topo (Tanpa Key)"
-                      : mapType === "hybrid"
-                        ? "Esri Satelit"
-                        : "Esri Street Map (Bebas Watermark)"}
+                  {mapType === "osm"
+                    ? "Peta Topografi Daerah"
+                    : mapType === "hybrid"
+                      ? "Citra Satelit Resolusi Tinggi"
+                      : "Peta Jalan Sidoarjo"}
                 </b>
               </p>
 
@@ -242,44 +226,6 @@ export default function MapPage({
                     )}
                   />
                 </button>
-              </div>
-
-              <div className="border-t border-line/60 pt-3">
-                <label htmlFor="gkey" className="block text-sm font-bold">
-                  Google Maps API key
-                </label>
-                <input
-                  id="gkey"
-                  value={draft}
-                  onChange={(e) => setDraft(e.target.value.trim())}
-                  placeholder={
-                    live ? "Tempel key baru untuk mengganti" : "AIza..."
-                  }
-                  className="mt-1.5 h-10 w-full rounded-lg border border-line px-3 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25"
-                />
-                {mapErr && (
-                  <p role="alert" className="mt-1 text-sm text-bad">
-                    {mapErr}
-                  </p>
-                )}
-                <p className="mt-1 text-xs leading-4 text-sub">
-                  Isi untuk beralih ke Google Maps. Atau set
-                  VITE_GOOGLE_MAPS_API_KEY di file .env agar aktif otomatis.
-                </p>
-                <div className="mt-2.5 flex gap-2">
-                  <Button
-                    className="flex-1"
-                    disabled={!draft}
-                    onClick={() => saveKey(draft)}
-                  >
-                    Terapkan
-                  </Button>
-                  {apiKey && (
-                    <Button variant="secondary" onClick={() => saveKey("")}>
-                      Hapus
-                    </Button>
-                  )}
-                </div>
               </div>
             </div>
           )}

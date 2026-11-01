@@ -1,13 +1,27 @@
 # Dependencies
 node_modules/
+**/node_modules/
 
-# Environment files
+# Environment & Secret files (Never commit real secrets/API keys)
 .env
-.env.local
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.pem
+*.key
 
 # Production build outputs
 dist/
 build/
+**/dist/
+**/build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
 
 # IDE & OS
 .DS_Store

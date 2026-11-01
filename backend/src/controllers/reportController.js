@@ -7,25 +7,43 @@ const mockProjects = require('../data/mockProjects');
  */
 async function addProjectReport(req, res) {
   try {
-    const { id } = req.params;
-    const { verdict, text, photo } = req.body;
+    const id = String(req.params.id || '').trim();
+    const { verdict, text, photo } = req.body || {};
+
+    if (!id || id.length > 50) {
+      return res.status(400).json({ error: 'ID proyek tidak valid' });
+    }
 
     if (!verdict || !['sesuai', 'tidak'].includes(verdict)) {
       return res.status(400).json({ error: 'Verdict harus berupa "sesuai" atau "tidak"' });
     }
 
     const reportId = 'r' + Date.now();
-    const cleanText = text && String(text).trim() !== ''
-      ? String(text).trim()
+    const rawText = text && String(text).trim() !== ''
+      ? String(text).trim().slice(0, 500)
       : (verdict === 'sesuai' ? 'Kondisi sesuai laporan.' : 'Kondisi tidak sesuai laporan.');
-    const photoUrl = photo || null;
+
+    let photoUrl = null;
+    if (photo && typeof photo === 'string') {
+      const trimmedPhoto = photo.trim();
+      if (
+        trimmedPhoto.length <= 1500000 &&
+        (trimmedPhoto.startsWith('data:image/') ||
+          trimmedPhoto.startsWith('http://') ||
+          trimmedPhoto.startsWith('https://') ||
+          trimmedPhoto.startsWith('blob:'))
+      ) {
+        photoUrl = trimmedPhoto;
+      }
+    }
+
     const ago = 'Baru saja';
 
-    let insertedReport = {
+    const insertedReport = {
       id: reportId,
       project_id: id,
       verdict,
-      text: cleanText,
+      text: rawText,
       ago,
       photo: photoUrl
     };
@@ -35,7 +53,7 @@ async function addProjectReport(req, res) {
       await db.query(
         `INSERT INTO reports (id, project_id, verdict, text, ago, photo, created_at)
          VALUES ($1, $2, $3, $4, $5, $6, NOW())`,
-        [reportId, id, verdict, cleanText, ago, photoUrl]
+        [reportId, id, verdict, rawText, ago, photoUrl]
       );
 
       // 2. If verdict is 'tidak', automatically update project cek = true
@@ -62,8 +80,8 @@ async function addProjectReport(req, res) {
       cekUpdated: verdict === 'tidak'
     });
   } catch (err) {
-    console.error('Error in addProjectReport:', err);
-    res.status(500).json({ error: 'Gagal menyimpan laporan', message: err.message });
+    console.error('Error in addProjectReport:', err.message);
+    res.status(500).json({ error: 'Gagal menyimpan laporan' });
   }
 }
 

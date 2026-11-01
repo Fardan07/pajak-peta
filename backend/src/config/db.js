@@ -2,17 +2,28 @@ const { Pool } = require('pg');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
-const connectionString = process.env.DATABASE_URL;
+let connectionString = process.env.DATABASE_URL || '';
+
+// Normalize sslmode parameter to prevent pg-connection-string deprecation warning
+if (
+  connectionString &&
+  connectionString.includes('sslmode=require') &&
+  !connectionString.includes('uselibpqcompat=')
+) {
+  connectionString += '&uselibpqcompat=true';
+}
 
 const pool = new Pool({
-  connectionString,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  connectionString: connectionString || undefined,
+  ssl: connectionString
+    ? {
+        rejectUnauthorized: false
+      }
+    : false
 });
 
 pool.on('error', (err) => {
-  console.error('Unexpected error on idle PostgreSQL client:', err);
+  console.error('Unexpected error on idle PostgreSQL client:', err.message);
 });
 
 module.exports = {
