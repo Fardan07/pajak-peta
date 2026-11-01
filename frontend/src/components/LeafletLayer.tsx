@@ -55,6 +55,7 @@ export default function LeafletLayer({
     lng: number
   } | null>(null)
   const selectRef = useRef(onSelect)
+  const prevSelectedRef = useRef<string | null>(selectedId)
   selectRef.current = onSelect
 
   useEffect(() => {
@@ -179,6 +180,8 @@ export default function LeafletLayer({
 
   useEffect(() => {
     const p = allProjects.find((x) => x.id === selectedId)
+    if (prevSelectedRef.current === selectedId) return
+    prevSelectedRef.current = selectedId
     const m = mapRef.current
     if (!m || !p) return
     const targetZoom = Math.max(m.getZoom(), 14.5)
@@ -277,7 +280,7 @@ export default function LeafletLayer({
                 </div>
                 <p className="text-[11px] text-sub mt-1.5 leading-snug">
                   {regionPopup.isMain
-                    ? 'Seluruh 24 proyek APBD Kabupaten Sidoarjo terpantau aktif di wilayah ini.'
+                    ? `Seluruh ${allProjects.length} proyek APBD Kabupaten Sidoarjo terpantau aktif di wilayah ini.`
                     : 'Wilayah tetangga di luar yurisdiksi anggaran APBD Kab. Sidoarjo.'}
                 </p>
               </div>

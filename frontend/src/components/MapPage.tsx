@@ -157,6 +157,23 @@ export default function MapPage({
               counts={projectCounts}
             />
           </div>
+          {list.length === 0 && (
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-warn/30 bg-[#FBF1D6] px-3 py-2 text-xs text-[#7A5600]">
+              <span>
+                Tidak ada proyek yang cocok dengan pencarian/filter.
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setQ("")
+                  setFilter("all")
+                }}
+                className="shrink-0 rounded-lg bg-white px-2.5 py-1 font-bold text-ink shadow-xs hover:bg-canvas cursor-pointer"
+              >
+                Reset
+              </button>
+            </div>
+          )}
         </div>
 
         <div

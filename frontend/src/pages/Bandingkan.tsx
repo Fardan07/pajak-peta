@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import {
   AlertCircle,
   AlertTriangle,
@@ -52,10 +52,21 @@ export default function Bandingkan({
   )
   const [idB, setIdB] = useState<string>(() => {
     if (initialBId && initialBId !== initialAId) return initialBId
-    // Default to a different contrasting project (e.g. p6 Katamso which is delayed/high urgency)
-    const alt = projects.find((p) => p.id !== (initialAId || projects[0]?.id))
-    return alt?.id || "p6"
+    const startA = initialAId || projects[0]?.id || "p1"
+    if (startA !== "p6" && projects.some((p) => p.id === "p6")) return "p6"
+    const alt = projects.find((p) => p.id !== startA)
+    return alt?.id || "p2"
   })
+
+  useEffect(() => {
+    if (initialAId) {
+      setIdA((prevA) => {
+        if (prevA === initialAId) return prevA
+        setIdB((prevB) => (prevB === initialAId ? prevA : prevB))
+        return initialAId
+      })
+    }
+  }, [initialAId])
 
   const pA = useMemo(
     () => projects.find((p) => p.id === idA) ?? projects[0],
@@ -142,7 +153,11 @@ export default function Bandingkan({
                 <select
                   id="select-proyek-a"
                   value={idA}
-                  onChange={(e) => setIdA(e.target.value)}
+                  onChange={(e) => {
+                    const nextA = e.target.value
+                    if (nextA === idB) setIdB(idA)
+                    setIdA(nextA)
+                  }}
                   className="w-full appearance-none rounded-xl border border-line bg-canvas py-2.5 pl-3.5 pr-9 text-sm font-bold text-ink shadow-xs focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 cursor-pointer"
                 >
                   {projects.map((p) => (
@@ -185,7 +200,11 @@ export default function Bandingkan({
                 <select
                   id="select-proyek-b"
                   value={idB}
-                  onChange={(e) => setIdB(e.target.value)}
+                  onChange={(e) => {
+                    const nextB = e.target.value
+                    if (nextB === idA) setIdA(idB)
+                    setIdB(nextB)
+                  }}
                   className="w-full appearance-none rounded-xl border border-line bg-canvas py-2.5 pl-3.5 pr-9 text-sm font-bold text-ink shadow-xs focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 cursor-pointer"
                 >
                   {projects.map((p) => (

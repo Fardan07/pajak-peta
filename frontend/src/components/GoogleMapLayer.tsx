@@ -183,7 +183,7 @@ export default function GoogleMapLayer({
         <div style="font-family: Poppins, sans-serif; padding: 6px; min-width: 220px;">
           <h4 style="margin: 0 0 4px; font-weight: 800; color: #14213d; font-size: 14px;">${name}</h4>
           <p style="margin: 0 0 8px; font-size: 11px; color: #5b6577;">${
-            isMain ? "Wilayah 24 Proyek PajakPeta" : "Perbatasan Wilayah"
+            isMain ? `Wilayah ${allProjects.length} Proyek PajakPeta` : "Perbatasan Wilayah"
           }</p>
           <div style="background: ${
             isMain ? "#FEF2F2" : "#F8FAFC"
@@ -195,7 +195,7 @@ export default function GoogleMapLayer({
             };">TOTAL PROYEK:</div>
             <div style="font-size: 18px; font-weight: 900; color: ${
               isMain ? "#B91C1C" : "#334155"
-            };">${isMain ? "24 Paket Proyek" : "0 Proyek"}</div>
+            };">${isMain ? `${allProjects.length} Paket Proyek` : "0 Proyek"}</div>
           </div>
         </div>
       `
@@ -208,7 +208,7 @@ export default function GoogleMapLayer({
       google.maps.event.removeListener(clickListener)
       infoWindow.close()
     }
-  }, [map, showBoundaries])
+  }, [map, showBoundaries, allProjects])
 
   useEffect(() => {
     const p = allProjects.find((x) => x.id === selectedId)

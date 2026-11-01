@@ -175,7 +175,7 @@ export default function DataTerbuka({
               </span>
             </div>
             <div className="mt-2 text-2xl font-extrabold text-ink sm:text-3xl">{rupiahShort(stats.totalCost)}</div>
-            <p className="mt-1 text-xs text-sub">Dari 24 paket proyek fisik Kabupaten Sidoarjo</p>
+            <p className="mt-1 text-xs text-sub">Dari {stats.total} paket proyek fisik Kabupaten Sidoarjo</p>
           </div>
 
           <div className="rounded-2xl border border-line bg-surface p-5 shadow-card">

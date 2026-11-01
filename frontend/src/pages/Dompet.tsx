@@ -86,7 +86,7 @@ function Field({
 }
 
 interface DompetProps {
-  onShare: (total: number) => void
+  onShare: (total: number, project?: Project) => void
   projects?: Project[]
 }
 
@@ -339,7 +339,7 @@ export default function Dompet({ onShare, projects = defaultProjects }: DompetPr
 
             {/* Tombol Aksi */}
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Button size="lg" icon={<Share2 size={18} />} className="flex-1 shadow-md shadow-brand/20 hover:shadow-lg transition-all" onClick={() => onShare(t.total)}>
+              <Button size="lg" icon={<Share2 size={18} />} className="flex-1 shadow-md shadow-brand/20 hover:shadow-lg transition-all" onClick={() => onShare(t.total, proj)}>
                 Bagikan Kartu Dampak
               </Button>
               <Button
@@ -347,7 +347,7 @@ export default function Dompet({ onShare, projects = defaultProjects }: DompetPr
                 variant="secondary"
                 icon={<ImageDown size={18} />}
                 className="flex-1 shadow-xs hover:shadow transition-all"
-                onClick={() => toast('Buka tab Kartu Dampak untuk memilih ukuran & format unduhan.')}
+                onClick={() => { onShare(t.total, proj); toast('Pilih format ukuran & tema kartu lalu klik Unduh PNG') }}
               >
                 Unduh Gambar Kartu
               </Button>

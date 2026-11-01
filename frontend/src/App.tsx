@@ -5,7 +5,7 @@ import CekLapangan from './components/CekLapangan'
 import MapPage from './components/MapPage'
 import type { Filter } from './components/MapControls'
 import { BrandMark, DataTag, ToastProvider, cx, useToast } from './components/ui'
-import { APP_NAME, API_BASE, TAGLINE, projects as initialProjects } from './data'
+import { APP_NAME, API_BASE, STORAGE_KEY, TAGLINE, projects as initialProjects } from './data'
 import type { Project, Report } from './data'
 import Bandingkan from './pages/Bandingkan'
 import Beranda from './pages/Beranda'
@@ -24,6 +24,29 @@ const nav: { key: Page; label: string; short: string; icon: typeof Sparkles }[] 
   { key: 'data', label: 'Data Terbuka', short: 'Data', icon: Database },
 ]
 
+function loadSavedProjects(): Project[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw)
+      if (Array.isArray(parsed) && parsed.length >= initialProjects.length) {
+        return parsed
+      }
+    }
+  } catch {
+    // Ignore storage read errors
+  }
+  return initialProjects
+}
+
+function saveProjectsToStorage(list: Project[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
+  } catch {
+    // Ignore quota or storage errors
+  }
+}
+
 function Shell() {
   const toast = useToast()
   const [page, setPage] = useState<Page>('beranda')
@@ -34,6 +57,7 @@ function Shell() {
   const [adminModalOpen, setAdminModalOpen] = useState(false)
   const [compareAId, setCompareAId] = useState<string>('p1')
   const [cardTotal, setCardTotal] = useState<number>(() => calcTax(5, 'motor_1', 'kos').total)
+  const [cardProject, setCardProject] = useState<Project>(() => initialProjects[0])
   const [, bump] = useState(0)
 
   const handleOpenCompare = (id: string) => {
@@ -41,21 +65,26 @@ function Shell() {
     setPage('bandingkan')
   }
 
-  // Live state initialized with static projects as zero-latency fallback
-  const [projectList, setProjectList] = useState<Project[]>(initialProjects)
+  // Live state initialized with saved/static projects as zero-latency fallback
+  const [projectList, setProjectList] = useState<Project[]>(loadSavedProjects)
 
-  // Fetch projects from backend Neon PostgreSQL on mount
+  // Fetch projects from backend API on mount only if API_BASE is configured
   useEffect(() => {
+    if (!API_BASE) return
     fetch(`${API_BASE}/api/projects`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        return res.json()
+      })
       .then((data) => {
         const arr: Project[] = Array.isArray(data) ? data : data.data
         if (arr && arr.length) {
           setProjectList(arr)
+          saveProjectsToStorage(arr)
         }
       })
-      .catch((err) => {
-        console.warn('Backend API tidak tersambung, menggunakan data statis:', err)
+      .catch(() => {
+        // Fallback silently to local/static data when backend is offline
       })
   }, [])
 
@@ -65,9 +94,9 @@ function Shell() {
   const addReport = async (r: Report) => {
     if (!selected) return
 
-    // 1. Optimistic UI update
-    setProjectList((prev) =>
-      prev.map((p) => {
+    // 1. Optimistic UI update + localStorage persistence
+    setProjectList((prev) => {
+      const updated = prev.map((p) => {
         if (p.id === selected.id) {
           return {
             ...p,
@@ -77,11 +106,14 @@ function Shell() {
         }
         return p
       })
-    )
+      saveProjectsToStorage(updated)
+      return updated
+    })
     bump((n) => n + 1)
     toast('Laporan terkirim. Terima kasih!')
 
-    // 2. Persist to Neon PostgreSQL Database
+    // 2. Persist to backend database if API_BASE is configured
+    if (!API_BASE) return
     try {
       const res = await fetch(`${API_BASE}/api/projects/${selected.id}/reports`, {
         method: 'POST',
@@ -93,9 +125,8 @@ function Shell() {
         }),
       })
       if (!res.ok) throw new Error(`Server error (${res.status})`)
-    } catch (err) {
-      console.warn('Gagal menyimpan laporan ke backend Neon:', err)
-      toast('Laporan tampil di layar, tapi gagal tersimpan ke server. Coba lagi nanti.')
+    } catch {
+      // Saved in localStorage fallback
     }
   }
 
@@ -175,14 +206,21 @@ function Shell() {
 
       {page === 'dompet' && (
         <Dompet
-          onShare={(t) => {
+          onShare={(t, proj) => {
             setCardTotal(t)
+            if (proj) setCardProject(proj)
             setPage('kartu')
           }}
           projects={projectList}
         />
       )}
-      {page === 'kartu' && <Kartu total={cardTotal} onBack={() => setPage('dompet')} />}
+      {page === 'kartu' && (
+        <Kartu
+          total={cardTotal}
+          project={cardProject}
+          onBack={() => setPage('dompet')}
+        />
+      )}
       {page === 'bandingkan' && (
         <Bandingkan
           projects={projectList}
@@ -229,8 +267,9 @@ function Shell() {
         isOpen={adminModalOpen}
         onClose={() => setAdminModalOpen(false)}
         existingProjects={projectList}
-        onSyncSuccess={(updated, firstSyncedId) => {
+        onSyncSuccess={(updated) => {
           setProjectList(updated)
+          saveProjectsToStorage(updated)
         }}
         onViewInMap={(targetId) => {
           setSelectedId(targetId)
