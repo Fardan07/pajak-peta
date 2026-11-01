@@ -93,6 +93,7 @@ export default function GoogleMapLayer({
   onError,
   showBoundaries = true,
   projects: allProjects = projects,
+  focusTrigger = 0,
 }: {
   apiKey: string
   list: Project[]
@@ -102,6 +103,7 @@ export default function GoogleMapLayer({
   onError: (m: string) => void
   showBoundaries?: boolean
   projects?: Project[]
+  focusTrigger?: number
 }) {
   const host = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<any>(null)
@@ -215,12 +217,12 @@ export default function GoogleMapLayer({
     if (!map || !p) return
     const t = setTimeout(() => {
       map.panTo({ lat: p.lat, lng: p.lng })
-      if (map.getZoom() < 14) {
-        map.setZoom(14)
+      if (map.getZoom() < 16) {
+        map.setZoom(16)
       }
     }, 200)
     return () => clearTimeout(t)
-  }, [map, selectedId, allProjects])
+  }, [map, selectedId, focusTrigger, allProjects])
 
   const groups = useMemo<Group[]>(() => {
     const thr = (44 * 360) / (256 * Math.pow(2, zoom))

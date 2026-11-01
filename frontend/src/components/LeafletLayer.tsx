@@ -33,6 +33,7 @@ export default function LeafletLayer({
   mapType,
   projects: allProjects = projects,
   showBoundaries = true,
+  focusTrigger = 0,
 }: {
   list: Project[]
   selectedId: string | null
@@ -40,6 +41,7 @@ export default function LeafletLayer({
   mapType: 'roadmap' | 'osm' | 'hybrid'
   projects?: Project[]
   showBoundaries?: boolean
+  focusTrigger?: number
 }) {
   const host = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
@@ -55,7 +57,8 @@ export default function LeafletLayer({
     lng: number
   } | null>(null)
   const selectRef = useRef(onSelect)
-  const prevSelectedRef = useRef<string | null>(selectedId)
+  const prevSelectedRef = useRef<string | null>(focusTrigger > 0 ? null : selectedId)
+  const prevFocusRef = useRef<number>(0)
   selectRef.current = onSelect
 
   useEffect(() => {
@@ -180,17 +183,18 @@ export default function LeafletLayer({
 
   useEffect(() => {
     const p = allProjects.find((x) => x.id === selectedId)
-    if (prevSelectedRef.current === selectedId) return
+    if (prevSelectedRef.current === selectedId && prevFocusRef.current === focusTrigger) return
     prevSelectedRef.current = selectedId
+    prevFocusRef.current = focusTrigger
     const m = mapRef.current
     if (!m || !p) return
-    const targetZoom = Math.max(m.getZoom(), 14.5)
+    const targetZoom = Math.max(m.getZoom(), 16)
     const t = setTimeout(() => {
       m.invalidateSize()
-      m.flyTo([p.lat, p.lng], targetZoom, { duration: 0.9 })
+      m.flyTo([p.lat, p.lng], targetZoom, { duration: 1.1 })
     }, 200)
     return () => clearTimeout(t)
-  }, [selectedId, allProjects])
+  }, [selectedId, focusTrigger, allProjects])
 
   const groups = useMemo<Group[]>(() => {
     const thr = (44 * 360) / (256 * Math.pow(2, zoom))

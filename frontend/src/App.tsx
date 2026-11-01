@@ -51,6 +51,7 @@ function Shell() {
   const toast = useToast()
   const [page, setPage] = useState<Page>('beranda')
   const [selectedId, setSelectedId] = useState<string | null>('p1')
+  const [focusTrigger, setFocusTrigger] = useState(0)
   const [filter, setFilter] = useState<Filter>('all')
   const [q, setQ] = useState('')
   const [cekOpen, setCekOpen] = useState(false)
@@ -185,6 +186,7 @@ function Shell() {
           onOpenData={() => setPage('data')}
           onSelectProject={(id) => {
             setSelectedId(id)
+            setFocusTrigger((n) => n + 1)
             setPage('peta')
           }}
         />
@@ -195,6 +197,7 @@ function Shell() {
           projects={projectList}
           selectedId={selectedId}
           setSelectedId={setSelectedId}
+          focusTrigger={focusTrigger}
           onCek={() => setCekOpen(true)}
           onCompare={handleOpenCompare}
           filter={filter}
@@ -227,6 +230,7 @@ function Shell() {
           initialAId={compareAId}
           onSelectProject={(id) => {
             setSelectedId(id)
+            setFocusTrigger((n) => n + 1)
             setPage('peta')
           }}
         />
@@ -272,7 +276,10 @@ function Shell() {
           saveProjectsToStorage(updated)
         }}
         onViewInMap={(targetId) => {
+          setFilter('all')
+          setQ('')
           setSelectedId(targetId)
+          setFocusTrigger((n) => n + 1)
           setPage('peta')
         }}
       />

@@ -27,6 +27,7 @@ export default function MapPage({
   q,
   setQ,
   projects: allProjects = projects,
+  focusTrigger = 0,
 }: {
   selectedId: string | null
   setSelectedId: (id: string | null) => void
@@ -37,6 +38,7 @@ export default function MapPage({
   q: string
   setQ: (s: string) => void
   projects?: Project[]
+  focusTrigger?: number
 }) {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ""
   const [mapType, setMapType] = useState<"roadmap" | "osm" | "hybrid">(
@@ -128,6 +130,7 @@ export default function MapPage({
             onError={setMapErr}
             showBoundaries={showBoundaries}
             projects={allProjects}
+            focusTrigger={focusTrigger}
           />
         ) : (
           <LeafletLayer
@@ -137,6 +140,7 @@ export default function MapPage({
             mapType={mapType}
             projects={allProjects}
             showBoundaries={showBoundaries}
+            focusTrigger={focusTrigger}
           />
         )}
 
