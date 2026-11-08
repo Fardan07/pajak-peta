@@ -14,7 +14,6 @@ import {
   HelpCircle,
   Layers,
   MapPin,
-  Scale,
   Sparkles,
   TrendingDown,
   TrendingUp,
@@ -33,6 +32,7 @@ import {
   rupiahShort,
 } from "../data"
 import type { Project } from "../data"
+import { useAnimatedFill, useCountUp, useScrollReveal } from "../hooks/useAnimations"
 
 interface BandingkanProps {
   projects?: Project[]
@@ -81,6 +81,13 @@ export default function Bandingkan({
 
   const urgA = useMemo(() => calcUrgencyScore(pA), [pA])
   const urgB = useMemo(() => calcUrgencyScore(pB), [pB])
+  const shownUrgA = Math.round(useCountUp(urgA, 600, 100, true))
+  const shownUrgB = Math.round(useCountUp(urgB, 600, 140, true))
+  const barFilled = useAnimatedFill(`${idA}-${idB}`, 80)
+
+  const sec2Reveal = useScrollReveal<HTMLDivElement>()
+  const sec3Reveal = useScrollReveal<HTMLDivElement>()
+  const sec4Reveal = useScrollReveal<HTMLDivElement>()
 
   const costStatA = useMemo(
     () => evaluateCostPerKm(pA, benchmark.median),
@@ -107,21 +114,42 @@ export default function Bandingkan({
   const metaB = CATEGORY_META[catB]
 
   const urgentProj = moreUrgent === "A" ? pA : pB
-  const urgentMeta = moreUrgent === "A" ? metaA : metaB
+  const urgentCat = moreUrgent === "A" ? catA : catB
+  const urgHigh = moreUrgent === "A" ? urgA : urgB
+  const urgLow = moreUrgent === "A" ? urgB : urgA
+
+  const priorityReason = useMemo(() => {
+    if (urgencyDiff <= 5) {
+      return "Kedua proyek memiliki tingkat urgensi yang hampir berimbang dari sisi kondisi fisik di lapangan maupun besarnya kebutuhan warga di wilayah sekitarnya."
+    }
+    const s1 = urgentProj.stats?.[1]
+    const s2 = urgentProj.stats?.[2]
+    const detailDamage = s1 ? `${s1.value} ${s1.label}` : "tingkat kerusakan fisik yang tinggi"
+    if (urgentCat === "jalan") {
+      return `Proyek ${moreUrgent} memiliki tingkat urgensi lebih tinggi (${urgHigh} vs ${urgLow}/100) karena kondisi jalan mencatat ${detailDamage} serta melayani arus kendaraan harian warga yang lebih padat${s2 ? ` (${s2.value} ${s2.label})` : ""}.`
+    }
+    if (urgentCat === "jembatan") {
+      return `Proyek ${moreUrgent} memiliki tingkat urgensi lebih tinggi (${urgHigh} vs ${urgLow}/100) karena struktur jembatan mencatat ${detailDamage} dan menjadi jalur penghubung vital mobilitas warga.`
+    }
+    if (urgentCat === "drainase") {
+      return `Proyek ${moreUrgent} memiliki tingkat urgensi lebih tinggi (${urgHigh} vs ${urgLow}/100) karena kawasan ini mengalami ${detailDamage} yang berdampak langsung pada pemukiman warga sekitar.`
+    }
+    if (urgentCat === "bangunan") {
+      return `Proyek ${moreUrgent} memiliki tingkat urgensi lebih tinggi (${urgHigh} vs ${urgLow}/100) karena fasilitas umum ini mencatat ${detailDamage} dengan tingkat kunjungan warga harian yang tinggi.`
+    }
+    return `Proyek ${moreUrgent} memiliki tingkat urgensi lebih tinggi (${urgHigh} vs ${urgLow}/100) karena kondisi lapangan mencatat ${detailDamage} yang membutuhkan penanganan lebih cepat demi keselamatan warga.`
+  }, [urgencyDiff, urgentProj, urgentCat, moreUrgent, urgHigh, urgLow])
 
   return (
-    <div className="scroll-quiet min-h-0 flex-1 overflow-y-auto bg-canvas">
+    <div className="scroll-quiet min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
       <div className="mx-auto max-w-[1240px] px-4 py-8 md:px-8 md:py-12">
         {/* Header */}
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+        <div
+          className="animate-hero-enter flex flex-col justify-between gap-4 sm:flex-row sm:items-start"
+          style={{ animationDelay: "0ms" }}
+        >
           <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-brand/20 bg-brand/5 px-3 py-1 text-xs font-bold text-brand mb-2">
-              <Scale size={14} />
-              <span>
-                Data-Driven Decision • Transparansi Prioritas Pembangunan
-              </span>
-            </div>
-            <h1 className="mt-1 text-[28px] font-extrabold leading-tight text-ink md:text-[40px]">
+            <h1 className="text-[28px] font-extrabold leading-tight text-ink md:text-[40px]">
               Kenapa Jalan Ini Dibangun Duluan?
             </h1>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-sub sm:text-base">
@@ -136,7 +164,10 @@ export default function Bandingkan({
         </div>
 
         {/* Project Selector Bar */}
-        <div className="mt-8 rounded-2xl border border-line bg-surface p-4 shadow-card md:p-6">
+        <div
+          className="animate-hero-enter mt-8 rounded-2xl border border-line bg-surface p-4 shadow-card md:p-6"
+          style={{ animationDelay: "80ms" }}
+        >
           <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
             {/* Proyek A Dropdown */}
             <div>
@@ -223,7 +254,11 @@ export default function Bandingkan({
         </div>
 
         {/* Insight Callout: Kesimpulan Algoritma Urgensi */}
-        <div className="mt-6 rounded-2xl border border-brand/25 bg-[#F0F7F6] p-5 shadow-xs">
+        <div
+          key={`insight-${idA}-${idB}`}
+          className="animate-card-enter mt-6 rounded-2xl border border-brand/25 bg-[#F0F7F6] p-5 shadow-xs"
+          style={{ animationDelay: "140ms" }}
+        >
           <div className="flex items-start gap-3.5">
             <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand text-white shadow-xs">
               <Flame size={18} />
@@ -239,13 +274,7 @@ export default function Bandingkan({
                 {moreUrgent === "A" ? urgB : urgA}/100)
               </h2>
               <p className="mt-1 text-xs text-sub leading-relaxed">
-                {urgencyDiff <= 5
-                  ? "Kedua proyek memiliki tingkat urgensi yang hampir berimbang dari sisi indikator lapangan dan kebutuhan warga di wilayahnya."
-                  : `Proyek ${moreUrgent} mendapatkan skor lebih tinggi berdasarkan justifikasi teknis ${urgentMeta.label.toLowerCase()} dengan ${
-                      urgentProj.stats?.[1]
-                        ? `${urgentProj.stats[1].label} (${urgentProj.stats[1].value})`
-                        : "tingkat kerusakan lebih tinggi"
-                    } serta skala dampak ke warga yang lebih mendesak.`}
+                {priorityReason}
               </p>
             </div>
           </div>
@@ -254,7 +283,11 @@ export default function Bandingkan({
         {/* Comparative Grid Table */}
         <div className="mt-8 space-y-6">
           {/* Section 1: Skor Urgensi Prioritas Pembangunan */}
-          <div className="rounded-2xl border border-line bg-surface p-5 shadow-card md:p-7">
+          <div
+            key={`urg-${idA}-${idB}`}
+            className="animate-card-enter rounded-2xl border border-line bg-surface p-5 shadow-card transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-brand/30 md:p-7"
+            style={{ animationDelay: "190ms" }}
+          >
             <div className="flex items-center gap-2 mb-5">
               <span className="flex size-6 items-center justify-center rounded-full bg-canvas border border-line text-xs font-bold text-ink">
                 1
@@ -279,7 +312,7 @@ export default function Bandingkan({
 
                 <div className="flex items-baseline gap-3 rounded-xl bg-canvas p-4 border border-line">
                   <div className="text-4xl font-extrabold text-brand">
-                    {urgA}
+                    {shownUrgA}
                   </div>
                   <div>
                     <div className="text-xs font-bold text-ink">
@@ -299,14 +332,14 @@ export default function Bandingkan({
                 <div className="h-2 w-full overflow-hidden rounded-full bg-line/60">
                   <div
                     className={cx(
-                      "h-full transition-all duration-300",
+                      "h-full transition-all duration-500 ease-out",
                       urgA >= 70
                         ? "bg-[#1F8A5B]"
                         : urgA >= 50
                           ? "bg-[#D99A00]"
                           : "bg-sub",
                     )}
-                    style={{ width: `${urgA}%` }}
+                    style={{ width: `${barFilled ? urgA : 0}%` }}
                   />
                 </div>
               </div>
@@ -325,7 +358,7 @@ export default function Bandingkan({
 
                 <div className="flex items-baseline gap-3 rounded-xl bg-canvas p-4 border border-line">
                   <div className="text-4xl font-extrabold text-[#A22920]">
-                    {urgB}
+                    {shownUrgB}
                   </div>
                   <div>
                     <div className="text-xs font-bold text-ink">
@@ -345,14 +378,14 @@ export default function Bandingkan({
                 <div className="h-2 w-full overflow-hidden rounded-full bg-line/60">
                   <div
                     className={cx(
-                      "h-full transition-all duration-300",
+                      "h-full transition-all duration-500 ease-out",
                       urgB >= 70
                         ? "bg-[#1F8A5B]"
                         : urgB >= 50
                           ? "bg-[#D99A00]"
                           : "bg-sub",
                     )}
-                    style={{ width: `${urgB}%` }}
+                    style={{ width: `${barFilled ? urgB : 0}%` }}
                   />
                 </div>
               </div>
@@ -360,7 +393,15 @@ export default function Bandingkan({
           </div>
 
           {/* Section 2: Anggaran & Indeks Biaya per Kilometer */}
-          <div className="rounded-2xl border border-line bg-surface p-5 shadow-card md:p-7">
+          <div
+            ref={sec2Reveal.ref}
+            className={cx(
+              "rounded-2xl border border-line bg-surface p-5 shadow-card transition-all duration-700 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-brand/30 md:p-7",
+              sec2Reveal.visible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-6 scale-[0.985]",
+            )}
+          >
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
                 <span className="flex size-6 items-center justify-center rounded-full bg-canvas border border-line text-xs font-bold text-ink">
@@ -421,6 +462,17 @@ export default function Bandingkan({
                       : "sesuai acuan daerah"}
                     )
                   </p>
+                  <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-line/60">
+                    <div
+                      className={cx(
+                        "h-full rounded-full transition-all duration-700 ease-out",
+                        costStatA.isHigh ? "bg-[#D99A00]" : "bg-[#1F8A5B]",
+                      )}
+                      style={{
+                        width: `${barFilled ? Math.min(100, Math.round(costStatA.ratio * 50)) : 0}%`,
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -469,13 +521,32 @@ export default function Bandingkan({
                       : "sesuai acuan daerah"}
                     )
                   </p>
+                  <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-line/60">
+                    <div
+                      className={cx(
+                        "h-full rounded-full transition-all duration-700 ease-out",
+                        costStatB.isHigh ? "bg-[#D99A00]" : "bg-[#1F8A5B]",
+                      )}
+                      style={{
+                        width: `${barFilled ? Math.min(100, Math.round(costStatB.ratio * 50)) : 0}%`,
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Section 3: Indikator Lapangan & Statistik Kebutuhan Warga */}
-          <div className="rounded-2xl border border-line bg-surface p-5 shadow-card md:p-7">
+          <div
+            ref={sec3Reveal.ref}
+            className={cx(
+              "rounded-2xl border border-line bg-surface p-5 shadow-card transition-all duration-700 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-brand/30 md:p-7",
+              sec3Reveal.visible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-6 scale-[0.985]",
+            )}
+          >
             <div className="flex items-center gap-2 mb-5">
               <span className="flex size-6 items-center justify-center rounded-full bg-canvas border border-line text-xs font-bold text-ink">
                 3
@@ -551,7 +622,15 @@ export default function Bandingkan({
           </div>
 
           {/* Section 4: Progres Pengerjaan vs Waktu Berjalan */}
-          <div className="rounded-2xl border border-line bg-surface p-5 shadow-card md:p-7">
+          <div
+            ref={sec4Reveal.ref}
+            className={cx(
+              "rounded-2xl border border-line bg-surface p-5 shadow-card transition-all duration-700 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-brand/30 md:p-7",
+              sec4Reveal.visible
+                ? "opacity-100 translate-y-0 scale-100"
+                : "opacity-0 translate-y-6 scale-[0.985]",
+            )}
+          >
             <div className="flex items-center gap-2 mb-5">
               <span className="flex size-6 items-center justify-center rounded-full bg-canvas border border-line text-xs font-bold text-ink">
                 4
@@ -586,7 +665,7 @@ export default function Bandingkan({
                   </div>
                   <div className="mt-3">
                     <ProgressBar
-                      value={pA.progress}
+                      value={barFilled ? pA.progress : 0}
                       elapsed={pA.elapsed}
                       status={pA.status}
                     />
@@ -635,7 +714,7 @@ export default function Bandingkan({
                   </div>
                   <div className="mt-3">
                     <ProgressBar
-                      value={pB.progress}
+                      value={barFilled ? pB.progress : 0}
                       elapsed={pB.elapsed}
                       status={pB.status}
                     />

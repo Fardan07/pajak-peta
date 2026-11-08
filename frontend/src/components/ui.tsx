@@ -86,7 +86,7 @@ export function Button({ variant = 'primary', size = 'md', loading, icon, hover,
     <button
       disabled={disabled || loading}
       className={cx(
-        'inline-flex items-center justify-center gap-2 rounded-lg px-4 text-sm font-bold transition-colors duration-150 active:scale-[0.99]',
+        'inline-flex items-center justify-center gap-2 rounded-lg px-4 text-sm font-bold transition-all duration-150 active:scale-[0.98]',
         size === 'lg' ? 'h-11' : 'h-10',
         v,
         className,
@@ -116,7 +116,7 @@ export function ProgressBar({ value, elapsed, status = 'tepat' }: { value: numbe
           const fill = Math.max(0, Math.min(1, (value - (i * 100) / n) / (100 / n)))
           return (
             <div key={i} className="h-2.5 flex-1 overflow-hidden rounded-[2px] bg-[#EDE9E0]">
-              <div className="h-full" style={{ width: `${fill * 100}%`, background: color }} />
+              <div className="h-full transition-all duration-500 ease-out" style={{ width: `${fill * 100}%`, background: color }} />
             </div>
           )
         })}
@@ -148,7 +148,7 @@ export function Segmented<T extends string>({ options, value, onChange, label }:
             aria-checked={on}
             onClick={() => onChange(o.value)}
             className={cx(
-              'flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-md px-2 text-sm font-bold transition-all duration-150',
+              'flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-md px-2 text-sm font-bold transition-all duration-150 active:scale-[0.98]',
               on ? 'bg-surface text-brand shadow-[0_1px_2px_rgba(20,33,61,.12)] ring-1 ring-brand' : 'text-sub hover:text-ink',
             )}
           >

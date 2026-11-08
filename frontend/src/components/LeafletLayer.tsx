@@ -117,10 +117,16 @@ export default function LeafletLayer({
         if (isMain) {
           return {
             color: '#DC2626', // Garis Merah Batas Kabupaten Sidoarjo
-            weight: 3.5,
-            opacity: 0.95,
+            weight: 2,
+            opacity: 0.7,
+            dashArray: '6, 4',
             fillColor: '#EF4444',
-            fillOpacity: 0.05,
+
+            fillOpacity: 0.02,
+
+
+
+
           }
         }
         return {
@@ -153,7 +159,7 @@ export default function LeafletLayer({
           mouseover: (e) => {
             const l = e.target
             l.setStyle({
-              weight: isMain ? 4.5 : 3,
+            weight: isMain ? 3 : 2,
               opacity: 1,
               fillOpacity: isMain ? 0.08 : 0.04,
             })

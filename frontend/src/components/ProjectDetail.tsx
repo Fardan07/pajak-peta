@@ -45,6 +45,7 @@ import {
   useToast,
 } from "./ui"
 import { ReportFeed } from "./CekLapangan"
+import { useAnimatedFill } from "../hooks/useAnimations"
 
 type Profil = "motor" | "rumah" | "kopi"
 const PROFIL: Record<Profil, {
@@ -107,13 +108,13 @@ function getProjectImage(p: Project): string {
   ) {
     return "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=800&q=80"
   }
-  // Default road & highway infrastructure
-  return "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=800&q=80"
+  // Default road & highway infrastructure (outdoor asphalt paving & heavy equipment)
+  return "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&w=800&q=80"
 }
 
 function SectionLabel({ n, title }: { n: string; title: string }) {
   return (
-    <div className="mb-4 flex items-center gap-2.5">
+    <div className="mb-3 flex items-center gap-2.5">
       <span className="flex size-6 items-center justify-center rounded-full bg-canvas border border-line text-xs font-bold text-ink shadow-xs">
         {n}
       </span>
@@ -153,7 +154,7 @@ function DetailSkeleton() {
       aria-busy="true"
       aria-label="Memuat detail proyek"
     >
-      <Skeleton className="h-44 w-full rounded-2xl" />
+      <Skeleton className="h-36 w-full rounded-2xl" />
       <Skeleton className="h-32 w-full rounded-2xl" />
       <Skeleton className="h-48 w-full rounded-2xl" />
       <Skeleton className="h-36 w-full rounded-2xl" />
@@ -177,9 +178,10 @@ export default function ProjectDetail({
   const toast = useToast()
   const [loading, setLoading] = useState(true)
   const [showAlurDana, setShowAlurDana] = useState(false)
+  const barFilled = useAnimatedFill(p.id, 140)
   useEffect(() => {
     setLoading(true)
-    const t = setTimeout(() => setLoading(false), 250)
+    const t = setTimeout(() => setLoading(false), 90)
     return () => clearTimeout(t)
   }, [p.id])
 
@@ -227,10 +229,10 @@ export default function ProjectDetail({
   const projectImg = getProjectImage(p)
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-canvas">
+    <div className="flex h-full min-h-0 flex-col bg-arch-grid">
       <div className="scroll-quiet min-h-0 flex-1 overflow-y-auto pb-4">
         {/* Banner Foto Proyek di Atas Header */}
-        <div className="relative h-44 w-full overflow-hidden bg-gradient-to-br from-[#14213D] to-[#0F5C5C]">
+        <div className="relative h-36 w-full overflow-hidden bg-gradient-to-br from-[#14213D] to-[#0F5C5C]">
           <img
             src={projectImg}
             alt={p.name}
@@ -268,7 +270,10 @@ export default function ProjectDetail({
         </div>
 
         {/* Header Information Card */}
-        <div className="mx-4 mt-3 rounded-2xl border border-line bg-surface p-5 shadow-card">
+        <div
+          className="animate-card-enter mx-4 mt-2.5 rounded-2xl border border-line bg-surface p-4 shadow-card"
+          style={{ animationDelay: "0ms" }}
+        >
           <div className="flex items-start justify-between gap-2">
             <div>
               <span className="text-[11px] font-bold uppercase tracking-wider text-brand">
@@ -320,13 +325,16 @@ export default function ProjectDetail({
 
         {loading && <DetailSkeleton />}
         {!loading && (
-          <div className="mt-3 space-y-3.5">
+          <div className="mt-2.5 space-y-3">
             {/* Card A: Realisasi Fisik */}
-            <section className="mx-4 rounded-2xl border border-line bg-surface p-5 shadow-card">
+            <section
+              className="animate-card-enter mx-4 rounded-2xl border border-line bg-surface p-4 shadow-card"
+              style={{ animationDelay: "50ms" }}
+            >
               <SectionLabel n="A" title="Realisasi Fisik" />
 
               {/* Kotak Perbandingan Progres Fisik vs Waktu Berjalan */}
-              <div className="rounded-xl border border-line bg-canvas/70 p-4 shadow-xs">
+              <div className="rounded-xl border border-line bg-canvas/70 p-3.5 shadow-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-sub">
                     Status Pengerjaan
@@ -345,11 +353,11 @@ export default function ProjectDetail({
                   </span>
                 </div>
 
-                <div className="mt-3 grid grid-cols-2 gap-3 divide-x divide-line/60">
+                <div className="mt-2.5 grid grid-cols-2 gap-3 divide-x divide-line/60">
                   <div>
                     <div className="text-xs text-sub">Realisasi Fisik</div>
                     <div className="mt-0.5 flex items-baseline gap-1.5">
-                      <span className="text-3xl font-extrabold tracking-tight text-ink">
+                      <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
                         {p.progress}%
                       </span>
                       <span className="text-xs text-sub">selesai</span>
@@ -358,7 +366,7 @@ export default function ProjectDetail({
                   <div className="pl-3">
                     <div className="text-xs text-sub">Waktu Berjalan</div>
                     <div className="mt-0.5 flex items-baseline gap-1.5">
-                      <span className="text-3xl font-extrabold tracking-tight text-sub">
+                      <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-sub">
                         {p.elapsed}%
                       </span>
                       <span className="text-xs text-sub">
@@ -368,16 +376,16 @@ export default function ProjectDetail({
                   </div>
                 </div>
 
-                <div className="mt-3.5">
+                <div className="mt-2.5">
                   <ProgressBar
-                    value={p.progress}
+                    value={barFilled ? p.progress : 0}
                     elapsed={p.elapsed}
                     status={p.status}
                   />
                 </div>
               </div>
 
-              <dl className="mt-4 grid grid-cols-2 gap-3 rounded-xl border border-line bg-surface p-3.5 text-sm shadow-xs">
+              <dl className="mt-3 grid grid-cols-2 gap-2.5 rounded-xl border border-line bg-surface p-3 text-sm shadow-xs">
                 <Meta
                   wide
                   icon={<HardHat size={14} className="text-brand" />}
@@ -401,7 +409,10 @@ export default function ProjectDetail({
             </section>
 
             {/* Card B: Transparansi Anggaran */}
-            <section className="mx-4 rounded-2xl border border-line bg-surface p-5 shadow-card">
+            <section
+              className="animate-card-enter mx-4 rounded-2xl border border-line bg-surface p-5 shadow-card"
+              style={{ animationDelay: "110ms" }}
+            >
               <SectionLabel n="B" title="Transparansi Anggaran" />
               <div className="flex items-baseline justify-between">
                 <div>
@@ -424,8 +435,8 @@ export default function ProjectDetail({
                 aria-label={`Pajak warga lokal ${p.apbd}%, bantuan pusat ${100 - p.apbd}%`}
               >
                 <div
-                  className="bg-brand transition-all duration-300"
-                  style={{ width: `${p.apbd}%` }}
+                  className="bg-brand transition-all duration-700 ease-out"
+                  style={{ width: `${barFilled ? p.apbd : 0}%` }}
                 />
                 <div className="flex-1 bg-[#CBD5E1] transition-all duration-300" />
               </div>
@@ -476,7 +487,7 @@ export default function ProjectDetail({
                         key={key}
                         onClick={() => setProfil(key)}
                         className={cx(
-                          "flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-bold transition-all",
+                          "flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md text-xs font-bold transition-all duration-150 active:scale-[0.98]",
                           isSelected
                             ? "bg-brand text-white shadow-xs"
                             : "text-sub hover:text-ink hover:bg-canvas",
@@ -699,7 +710,10 @@ export default function ProjectDetail({
             </section>
 
             {/* Card C: Statistik Daerah */}
-            <section className="mx-4 rounded-2xl border border-line bg-surface p-5 shadow-card">
+            <section
+              className="animate-card-enter mx-4 rounded-2xl border border-line bg-surface p-5 shadow-card"
+              style={{ animationDelay: "170ms" }}
+            >
               <SectionLabel
                 n="C"
                 title={
@@ -746,11 +760,20 @@ export default function ProjectDetail({
                       }
                     />
                   </span>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-ink">
                       Indeks Urgensi Lapangan: {urgency}/100
                     </div>
-                    <div className="text-[11px] text-sub truncate">
+                    <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-line/60">
+                      <div
+                        className={cx(
+                          "h-full rounded-full transition-all duration-700 ease-out",
+                          urgency >= 70 ? "bg-[#1F8A5B]" : "bg-[#D99A00]",
+                        )}
+                        style={{ width: `${barFilled ? urgency : 0}%` }}
+                      />
+                    </div>
+                    <div className="mt-1 text-[11px] text-sub truncate">
                       {category === "bangunan"
                         ? "Dihitung dari kepadatan pengunjung, kerusakan fasilitas, & laporan keluhan"
                         : category === "drainase"
@@ -784,7 +807,10 @@ export default function ProjectDetail({
             </section>
 
             {/* Card D: Pantauan Warga Sekitar (Laporan & Foto Warga) */}
-            <section className="mx-4 rounded-2xl border border-line bg-surface p-5 shadow-card">
+            <section
+              className="animate-card-enter mx-4 rounded-2xl border border-line bg-surface p-5 shadow-card"
+              style={{ animationDelay: "230ms" }}
+            >
               <div className="flex items-center justify-between mb-3">
                 <SectionLabel n="D" title="Pantauan Warga Sekitar" />
                 <span className="text-xs font-semibold text-sub">
@@ -806,13 +832,13 @@ export default function ProjectDetail({
 
                 <div className="mt-2 flex h-2.5 w-full overflow-hidden rounded-full bg-line/60">
                   <div
-                    className="h-full bg-[#1F8A5B] transition-all duration-300"
-                    style={{ width: `${accuratePct}%` }}
+                    className="h-full bg-[#1F8A5B] transition-all duration-700 ease-out"
+                    style={{ width: `${barFilled ? accuratePct : 0}%` }}
                     title={`${accuratePct}% menyatakan sesuai`}
                   />
                   <div
-                    className="h-full bg-[#C8372D] transition-all duration-300"
-                    style={{ width: `${100 - accuratePct}%` }}
+                    className="h-full bg-[#C8372D] transition-all duration-700 ease-out"
+                    style={{ width: `${barFilled ? 100 - accuratePct : 0}%` }}
                     title={`${100 - accuratePct}% menyatakan tidak sesuai`}
                   />
                 </div>

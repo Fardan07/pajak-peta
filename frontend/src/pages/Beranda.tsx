@@ -3,18 +3,13 @@ import {
   AlertTriangle,
   ArrowRight,
   BarChart3,
-  CheckCircle2,
   ChevronRight,
-  Clock,
   Compass,
-  FileSpreadsheet,
-  HardHat,
   HeartHandshake,
   Layers,
   MapPin,
   Map as MapIcon,
   MessageSquareWarning,
-  Sparkles,
   TrendingUp,
   Users,
   Wallet,
@@ -22,6 +17,7 @@ import {
 import { APP_NAME, TAGLINE, rupiahShort } from '../data'
 import type { Project } from '../data'
 import { Button, StatusChip, cx } from '../components/ui'
+import { useCountUp, useScrollReveal } from '../hooks/useAnimations'
 
 interface BerandaProps {
   projects: Project[]
@@ -51,48 +47,60 @@ export default function Beranda({
     return { totalProjects, totalCost, avgProgress, totalReports, needsCheckCount }
   }, [projects])
 
+  // Smooth count-up values for the 4 Hero metric cards (delays: 200, 275, 350, 425)
+  const countProjects = Math.round(useCountUp(stats.totalProjects, 900, 200, true))
+  const totalCostBillionTarget = stats.totalCost / 1_000_000_000
+  const countCostBillion = useCountUp(totalCostBillionTarget, 900, 275, true)
+  const countAvgProgress = Math.round(useCountUp(stats.avgProgress, 900, 350, true))
+  const countReports = Math.round(useCountUp(stats.totalReports, 900, 425, true))
+
+  const formattedAnimatedCost = useMemo(() => {
+    if (stats.totalCost >= 1_000_000_000) {
+      return `Rp ${countCostBillion.toFixed(1).replace('.', ',')} miliar`
+    }
+    return rupiahShort(stats.totalCost)
+  }, [stats.totalCost, countCostBillion])
+
   // Highlights: top 3 projects needing citizen attention
   const spotlightProjects = useMemo(() => {
     const filtered = projects.filter((p) => p.status === 'telat' || p.cek)
     return filtered.slice(0, 3)
   }, [projects])
 
+  // Scroll-reveal observers for lower sections
+  const pillarsReveal = useScrollReveal<HTMLElement>()
+  const spotlightReveal = useScrollReveal<HTMLElement>()
+
   return (
-    <div className="scroll-quiet min-h-0 flex-1 overflow-y-auto bg-canvas text-ink">
+    <div className="relative scroll-quiet min-h-0 flex-1 overflow-y-auto overflow-x-hidden text-ink">
       {/* ---------- HERO SECTION ---------- */}
-      <section className="relative overflow-hidden border-b border-line bg-gradient-to-b from-[#FAF8F4] via-surface to-canvas px-4 pb-16 pt-10 sm:px-6 md:pb-24 md:pt-16 lg:px-8">
-        {/* Subtle decorative mesh background */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-40"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle at 18% 25%, rgba(15, 92, 92, 0.08) 0%, transparent 45%), radial-gradient(circle at 82% 75%, rgba(217, 154, 0, 0.06) 0%, transparent 50%)',
-          }}
-        />
-
-        <div className="relative mx-auto max-w-6xl">
+      <section className="relative overflow-hidden border-b border-line px-4 pb-10 pt-6 sm:px-6 md:pb-14 md:pt-10 lg:px-8">
+        <div className="relative z-10 mx-auto max-w-6xl">
           <div className="flex flex-col items-center text-center">
-            {/* Top Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/5 px-3.5 py-1.5 text-xs font-semibold text-brand shadow-xs">
-              <span className="size-2 rounded-full bg-brand animate-pulse" />
-              <span>Open Government Data • Kabupaten Sidoarjo</span>
-            </div>
-
-            {/* Main Headline */}
-            <h1 className="mt-5 max-w-4xl text-3xl font-extrabold tracking-tight sm:text-5xl md:text-6xl md:leading-[1.12]">
+            {/* Main Headline (Delay 0ms) */}
+            <h1
+              className="animate-hero-enter max-w-4xl text-3xl font-extrabold tracking-tight sm:text-5xl md:text-6xl md:leading-[1.12]"
+              style={{ animationDelay: '0ms' }}
+            >
               Telusuri Uang Pajakmu,{' '}
               <span className="text-brand">Pantau Wujud Nyatanya</span> di Sekitarmu.
             </h1>
 
-            {/* Subheadline */}
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-sub sm:text-lg">
+            {/* Subheadline (Delay 75ms) */}
+            <p
+              className="animate-hero-enter mt-3.5 max-w-2xl text-base leading-relaxed text-sub sm:text-lg"
+              style={{ animationDelay: '75ms' }}
+            >
               Mengubah angka anggaran APBD yang rumit menjadi peta interaktif yang jujur.
               Lihat ke mana pajak STNK, PBB, dan jajanmu bermuara, bandingkan klaim progres dinas dengan
               fakta lapangan, dan awasi bersama.
             </p>
 
-            {/* CTAs */}
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            {/* CTAs (Delay 150ms) */}
+            <div
+              className="animate-hero-enter mt-6 flex flex-col gap-3 sm:flex-row sm:items-center"
+              style={{ animationDelay: '150ms' }}
+            >
               <Button
                 size="lg"
                 icon={<MapIcon size={18} />}
@@ -113,9 +121,12 @@ export default function Beranda({
             </div>
           </div>
 
-          {/* Floating Live Summary Cards */}
-          <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-            <div className="group rounded-2xl border border-line bg-surface/90 p-4 sm:p-5 shadow-card backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+          {/* Floating Live Summary Cards (Staggered 200ms, 275ms, 350ms, 425ms) */}
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            <div
+              className="animate-hero-enter group rounded-2xl border border-line bg-surface/92 p-4 sm:p-5 shadow-card backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-brand/30"
+              style={{ animationDelay: '200ms' }}
+            >
               <div className="flex items-center justify-between text-sub">
                 <span className="text-xs font-semibold uppercase tracking-wider">Pantauan Proyek</span>
                 <span className="flex size-8 items-center justify-center rounded-lg bg-canvas text-brand">
@@ -123,12 +134,15 @@ export default function Beranda({
                 </span>
               </div>
               <div className="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
-                {stats.totalProjects} <span className="text-sm font-semibold text-sub">titik</span>
+                {countProjects} <span className="text-sm font-semibold text-sub">titik</span>
               </div>
               <p className="mt-1 text-xs text-sub">Tersebar di wilayah Sidoarjo</p>
             </div>
 
-            <div className="group rounded-2xl border border-line bg-surface/90 p-4 sm:p-5 shadow-card backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+            <div
+              className="animate-hero-enter group rounded-2xl border border-line bg-surface/92 p-4 sm:p-5 shadow-card backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-brand/30"
+              style={{ animationDelay: '275ms' }}
+            >
               <div className="flex items-center justify-between text-sub">
                 <span className="text-xs font-semibold uppercase tracking-wider">Anggaran Terdata</span>
                 <span className="flex size-8 items-center justify-center rounded-lg bg-canvas text-brand">
@@ -136,12 +150,15 @@ export default function Beranda({
                 </span>
               </div>
               <div className="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
-                {rupiahShort(stats.totalCost)}
+                {formattedAnimatedCost}
               </div>
               <p className="mt-1 text-xs text-sub">Kombinasi PAD dan APBN</p>
             </div>
 
-            <div className="group rounded-2xl border border-line bg-surface/90 p-4 sm:p-5 shadow-card backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+            <div
+              className="animate-hero-enter group rounded-2xl border border-line bg-surface/92 p-4 sm:p-5 shadow-card backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-brand/30"
+              style={{ animationDelay: '350ms' }}
+            >
               <div className="flex items-center justify-between text-sub">
                 <span className="text-xs font-semibold uppercase tracking-wider">Rata-rata Fisik</span>
                 <span className="flex size-8 items-center justify-center rounded-lg bg-canvas text-[#1F8A5B]">
@@ -149,12 +166,15 @@ export default function Beranda({
                 </span>
               </div>
               <div className="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
-                {stats.avgProgress}%
+                {countAvgProgress}%
               </div>
               <p className="mt-1 text-xs text-sub">Realisasi pengerjaan saat ini</p>
             </div>
 
-            <div className="group rounded-2xl border border-line bg-surface/90 p-4 sm:p-5 shadow-card backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+            <div
+              className="animate-hero-enter group rounded-2xl border border-line bg-surface/92 p-4 sm:p-5 shadow-card backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-brand/30"
+              style={{ animationDelay: '425ms' }}
+            >
               <div className="flex items-center justify-between text-sub">
                 <span className="text-xs font-semibold uppercase tracking-wider">Cek Lapangan Warga</span>
                 <span className="flex size-8 items-center justify-center rounded-lg bg-canvas text-[#D99A00]">
@@ -162,7 +182,7 @@ export default function Beranda({
                 </span>
               </div>
               <div className="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
-                {stats.totalReports} <span className="text-sm font-semibold text-sub">laporan</span>
+                {countReports} <span className="text-sm font-semibold text-sub">laporan</span>
               </div>
               <p className="mt-1 text-xs text-sub">{stats.needsCheckCount} proyek dalam radar waspada</p>
             </div>
@@ -170,9 +190,19 @@ export default function Beranda({
         </div>
       </section>
 
-      {/* ---------- 3 PILAR TRANSPARANSI ---------- */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8">
-        <div className="text-center">
+      {/* ---------- 3 PILAR TRANSPARANSI (Scroll-Reveal) ---------- */}
+      <section
+        ref={pillarsReveal.ref}
+        className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20 lg:px-8"
+      >
+        <div
+          className={cx(
+            'text-center transition-all duration-700 ease-out',
+            pillarsReveal.visible
+              ? 'opacity-100 translate-y-0 scale-100'
+              : 'opacity-0 translate-y-6 scale-[0.985]',
+          )}
+        >
           <p className="text-xs font-bold uppercase tracking-wider text-brand">Prinsip Keterbukaan</p>
           <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
             Bagaimana PajakPeta Bekerja?
@@ -184,7 +214,15 @@ export default function Beranda({
 
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {/* Card 1 */}
-          <div className="flex flex-col justify-between rounded-2xl border border-line bg-surface p-6 shadow-card transition-all hover:border-brand/30 hover:shadow-md">
+          <div
+            style={{ transitionDelay: pillarsReveal.visible ? '90ms' : '0ms' }}
+            className={cx(
+              'flex flex-col justify-between rounded-2xl border border-line bg-surface p-6 shadow-card transition-all duration-700 ease-out hover:-translate-y-0.5 hover:border-brand/30 hover:shadow-md',
+              pillarsReveal.visible
+                ? 'opacity-100 translate-y-0 scale-100'
+                : 'opacity-0 translate-y-6 scale-[0.985]',
+            )}
+          >
             <div>
               <div className="flex size-12 items-center justify-center rounded-xl bg-[#E6F3EC] text-[#14633F]">
                 <BarChart3 size={24} />
@@ -206,7 +244,15 @@ export default function Beranda({
           </div>
 
           {/* Card 2 */}
-          <div className="flex flex-col justify-between rounded-2xl border border-line bg-surface p-6 shadow-card transition-all hover:border-brand/30 hover:shadow-md">
+          <div
+            style={{ transitionDelay: pillarsReveal.visible ? '180ms' : '0ms' }}
+            className={cx(
+              'flex flex-col justify-between rounded-2xl border border-line bg-surface p-6 shadow-card transition-all duration-700 ease-out hover:-translate-y-0.5 hover:border-brand/30 hover:shadow-md',
+              pillarsReveal.visible
+                ? 'opacity-100 translate-y-0 scale-100'
+                : 'opacity-0 translate-y-6 scale-[0.985]',
+            )}
+          >
             <div>
               <div className="flex size-12 items-center justify-center rounded-xl bg-[#EAF2F1] text-brand">
                 <HeartHandshake size={24} />
@@ -214,7 +260,7 @@ export default function Beranda({
               <span className="mt-5 inline-block text-[11px] font-bold uppercase tracking-wider text-brand">Pilar 02</span>
               <h3 className="mt-1 text-lg font-bold text-ink">Analogi Patungan Warga</h3>
               <p className="mt-2 text-sm leading-relaxed text-sub">
-                Kami menyederhanakan miliaran rupiah APBD menjadi <strong>2 Kantong</strong> (PAD & Bantuan Pusat) serta mengonversinya menjadi setara jumlah STNK motor, PBB rumah, atau gelas kopi warga.
+                Kami menyederhanakan miliaran rupiah APBD menjadi <strong>2 Kantong</strong> (PAD &amp; Bantuan Pusat) serta mengonversinya menjadi setara jumlah STNK motor, PBB rumah, atau gelas kopi warga.
               </p>
             </div>
             <div className="mt-6 pt-4 border-t border-line/60 flex items-center justify-between text-xs text-sub">
@@ -224,13 +270,21 @@ export default function Beranda({
           </div>
 
           {/* Card 3 */}
-          <div className="flex flex-col justify-between rounded-2xl border border-line bg-surface p-6 shadow-card transition-all hover:border-brand/30 hover:shadow-md">
+          <div
+            style={{ transitionDelay: pillarsReveal.visible ? '270ms' : '0ms' }}
+            className={cx(
+              'flex flex-col justify-between rounded-2xl border border-line bg-surface p-6 shadow-card transition-all duration-700 ease-out hover:-translate-y-0.5 hover:border-brand/30 hover:shadow-md',
+              pillarsReveal.visible
+                ? 'opacity-100 translate-y-0 scale-100'
+                : 'opacity-0 translate-y-6 scale-[0.985]',
+            )}
+          >
             <div>
               <div className="flex size-12 items-center justify-center rounded-xl bg-[#FBF1D6] text-[#7A5600]">
                 <MessageSquareWarning size={24} />
               </div>
               <span className="mt-5 inline-block text-[11px] font-bold uppercase tracking-wider text-brand">Pilar 03</span>
-              <h3 className="mt-1 text-lg font-bold text-ink">Bukti Statistik & Cek Lapangan</h3>
+              <h3 className="mt-1 text-lg font-bold text-ink">Bukti Statistik &amp; Cek Lapangan</h3>
               <p className="mt-2 text-sm leading-relaxed text-sub">
                 Warga sekitar dapat memverifikasi klaim progres dinas dengan menekan tombol <em>Sesuai</em> atau <em>Tidak Sesuai</em> serta mengunggah bukti foto agar proyek yang janggal segera diaudit.
               </p>
@@ -243,10 +297,20 @@ export default function Beranda({
         </div>
       </section>
 
-      {/* ---------- SPOTLIGHT PROYEK RAWAN / PERLU CEK ---------- */}
-      <section className="border-y border-line bg-surface px-4 py-16 sm:px-6 md:py-20 lg:px-8">
+      {/* ---------- SPOTLIGHT PROYEK RAWAN / PERLU CEK (Scroll-Reveal + Animated Progress Bars) ---------- */}
+      <section
+        ref={spotlightReveal.ref}
+        className="border-y border-line bg-surface/90 backdrop-blur-xs px-4 py-16 sm:px-6 md:py-20 lg:px-8"
+      >
         <div className="mx-auto max-w-6xl">
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div
+            className={cx(
+              'flex flex-col justify-between gap-4 sm:flex-row sm:items-end transition-all duration-700 ease-out',
+              spotlightReveal.visible
+                ? 'opacity-100 translate-y-0 scale-100'
+                : 'opacity-0 translate-y-6 scale-[0.985]',
+            )}
+          >
             <div>
               <div className="inline-flex items-center gap-1.5 rounded-md bg-[#FDEEEB] px-2.5 py-1 text-xs font-bold text-bad">
                 <AlertTriangle size={14} />
@@ -271,8 +335,9 @@ export default function Beranda({
           </div>
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {spotlightProjects.map((p) => {
+            {spotlightProjects.map((p, idx) => {
               const diff = p.progress - p.elapsed
+              const staggerMs = (idx + 1) * 90
               return (
                 <div
                   key={p.id}
@@ -280,7 +345,13 @@ export default function Beranda({
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onSelectProject(p.id)}
-                  className="group flex flex-col justify-between rounded-2xl border border-line bg-canvas/60 p-5 shadow-xs transition-all hover:-translate-y-1 hover:border-brand hover:bg-surface hover:shadow-card cursor-pointer"
+                  style={{ transitionDelay: spotlightReveal.visible ? `${staggerMs}ms` : '0ms' }}
+                  className={cx(
+                    'group flex flex-col justify-between rounded-2xl border border-line bg-canvas/60 p-5 shadow-xs transition-all duration-700 ease-out hover:-translate-y-0.5 hover:border-brand/30 hover:bg-surface hover:shadow-md active:scale-[0.98] cursor-pointer',
+                    spotlightReveal.visible
+                      ? 'opacity-100 translate-y-0 scale-100'
+                      : 'opacity-0 translate-y-6 scale-[0.985]',
+                  )}
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2">
@@ -303,9 +374,10 @@ export default function Beranda({
                       </div>
                       <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-line/60">
                         <div
-                          className="h-full rounded-full transition-all"
+                          className="h-full rounded-full transition-all duration-1000 ease-out"
                           style={{
-                            width: `${p.progress}%`,
+                            width: spotlightReveal.visible ? `${p.progress}%` : '0%',
+                            transitionDelay: spotlightReveal.visible ? `${staggerMs + 180}ms` : '0ms',
                             background: p.status === 'telat' ? '#C8372D' : '#D99A00',
                           }}
                         />
@@ -340,7 +412,7 @@ export default function Beranda({
               <span className="text-lg font-bold tracking-tight text-ink">{APP_NAME}</span>
               <span className="text-xs text-sub mt-0.5">{TAGLINE}</span>
               <p className="mt-2 text-xs text-sub max-w-sm text-center sm:text-left">
-                Platform transparansi anggaran daerah & verifikasi proyek fisik Kabupaten Sidoarjo.
+                Platform transparansi anggaran daerah &amp; verifikasi proyek fisik Kabupaten Sidoarjo.
               </p>
             </div>
 

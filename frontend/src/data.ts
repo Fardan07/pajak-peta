@@ -1,7 +1,7 @@
 export const APP_NAME = "PajakPeta"
 export const TAGLINE = "Telusuri Pajakmu, Pantau Wujudnya"
 export const APP_DOMAIN = "pajakpeta.id"
-export const STORAGE_KEY = "pajakpeta_projects_v2"
+export const STORAGE_KEY = "pajakpeta_projects_v1"
 // Mode mandiri (tanpa backend) jika VITE_API_URL tidak diset
 
 // Base URL API backend. Dapat dioverride via VITE_API_URL saat build/deploy.

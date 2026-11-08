@@ -20,6 +20,12 @@
   --animate-fade-in: fade-in 200ms ease-out both;
   --animate-pulse-ring: pulse-ring 2s ease-out infinite;
   --animate-shimmer: shimmer 1.4s ease-in-out infinite;
+  --animate-hero-enter: hero-enter 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-page-enter: page-enter 450ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-card-enter: card-enter 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-modal-pop: modal-pop 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-carto-pulse: carto-pulse 3s ease-in-out infinite;
+  --animate-radar-ping: radar-ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
   @keyframes slide-in {
     from { transform: translateX(32px); opacity: 0; }
     to { transform: none; opacity: 1; }
@@ -41,16 +47,89 @@
     50% { opacity: 0.45; }
     100% { opacity: 1; }
   }
+  @keyframes hero-enter {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes carto-pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.85;
+    }
+    50% {
+      transform: scale(1.75);
+      opacity: 0.15;
+    }
+  }
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes card-enter {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes modal-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  @keyframes radar-ping {
+    0% {
+      transform: scale(0.8);
+      opacity: 0.75;
+    }
+    80%, 100% {
+      transform: scale(2.8);
+      opacity: 0;
+    }
+  }
 }
 
 @layer base {
   html, body, #root { height: 100%; }
   body {
-    background: var(--color-canvas);
+    background-color: var(--color-canvas);
+    background-image:
+      radial-gradient(rgba(15, 92, 92, 0.16) 1px, transparent 1px),
+      linear-gradient(to right, rgba(15, 92, 92, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15, 92, 92, 0.06) 1px, transparent 1px);
+    background-size: 32px 32px, 64px 64px, 64px 64px;
     color: var(--color-ink);
     font-family: var(--font-sans);
     font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
+  }
+  .bg-arch-grid {
+    background-color: var(--color-canvas);
+    background-image:
+      radial-gradient(rgba(15, 92, 92, 0.16) 1px, transparent 1px),
+      linear-gradient(to right, rgba(15, 92, 92, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15, 92, 92, 0.06) 1px, transparent 1px);
+    background-size: 32px 32px, 64px 64px, 64px 64px;
   }
   :focus-visible {
     outline: 2px solid var(--color-brand);
@@ -68,7 +147,12 @@
   .no-bar { scrollbar-width: none; }
   .no-bar::-webkit-scrollbar { display: none; }
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      transition-duration: 0.01ms !important;
+      transition-delay: 0ms !important;
+    }
   }
 }
 

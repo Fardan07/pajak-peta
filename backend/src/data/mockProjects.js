@@ -1,4 +1,4 @@
-// mockProjects.js — Updated by Bulk Auto-Sync
+// mockProjects.js — Default 24 Proyek Kabupaten Sidoarjo
 
 module.exports = [
   {
@@ -8,8 +8,8 @@ module.exports = [
     "category": "jalan",
     "status": "tepat",
     "cek": false,
-    "progress": 88,
-    "elapsed": 75,
+    "progress": 68,
+    "elapsed": 62,
     "sisa": 41,
     "cost": 4800000000,
     "apbd": 60,
@@ -352,19 +352,19 @@ module.exports = [
   },
   {
     "id": "p6",
-    "name": "Rehabilitasi Jembatan Pagerwojo",
-    "loc": "Kec. Buduran, Sidoarjo",
-    "category": "jembatan",
-    "status": "tepat",
+    "name": "Pelebaran Jl. Brigjen Katamso",
+    "loc": "Kec. Waru, Sidoarjo",
+    "category": "jalan",
+    "status": "telat",
     "cek": true,
-    "progress": 62,
-    "elapsed": 60,
+    "progress": 41,
+    "elapsed": 82,
     "sisa": 12,
-    "cost": 18900000000,
+    "cost": 9400000000,
     "apbd": 30,
-    "contractor": "CV Delta Prasetya",
+    "contractor": "CV Andalan Mitra Konstruksi",
     "start": "27 Agu 2026",
-    "end": "10 Nov 2026",
+    "end": "2 Nov 2026",
     "x": 24,
     "y": 43,
     "km": 2.8,
@@ -1635,137 +1635,5 @@ module.exports = [
         ]
       }
     ]
-  },
-  {
-    "id": "p25",
-    "name": "Pembangunan Flyover Aloha Waru Tahap 2",
-    "loc": "Kec. Waru, Sidoarjo",
-    "category": "jembatan",
-    "status": "tepat",
-    "cek": false,
-    "progress": 35,
-    "elapsed": 30,
-    "sisa": 98,
-    "cost": 18500000000,
-    "apbd": 45,
-    "contractor": "PT Adhi Karya Nusantara",
-    "start": "15 Agu 2026",
-    "end": "20 Des 2026",
-    "x": 50,
-    "y": 50,
-    "km": 1.5,
-    "lat": -7.35494,
-    "lng": 112.73215,
-    "stats": [
-      {
-        "data": [
-          19,
-          19,
-          19,
-          20,
-          23,
-          24,
-          23,
-          24
-        ],
-        "label": "kendaraan melintas / hari",
-        "value": "24.500"
-      },
-      {
-        "data": [
-          14,
-          13,
-          17,
-          19,
-          23,
-          25,
-          27,
-          29
-        ],
-        "label": "titik retak & deformasi",
-        "value": "28"
-      },
-      {
-        "data": [
-          29,
-          32,
-          31,
-          31,
-          32,
-          34,
-          35,
-          37
-        ],
-        "label": "usia struktur jembatan",
-        "value": "35 tahun"
-      }
-    ],
-    "reports": []
-  },
-  {
-    "id": "p26",
-    "name": "Normalisasi Saluran Drainase Kali Sidokare",
-    "loc": "Kec. Sidoarjo, Sidoarjo",
-    "category": "drainase",
-    "status": "tepat",
-    "cek": false,
-    "progress": 55,
-    "elapsed": 48,
-    "sisa": 68,
-    "cost": 4200000000,
-    "apbd": 85,
-    "contractor": "PT Wijaya Drainase Utama",
-    "start": "15 Agu 2026",
-    "end": "15 Jan 2027",
-    "x": 50,
-    "y": 50,
-    "km": 1.5,
-    "lat": -7.4468,
-    "lng": 112.71367,
-    "stats": [
-      {
-        "data": [
-          6,
-          5,
-          7,
-          11,
-          11,
-          13,
-          14,
-          14
-        ],
-        "label": "kejadian genangan / tahun",
-        "value": "14"
-      },
-      {
-        "data": [
-          22,
-          25,
-          28,
-          31,
-          34,
-          39,
-          41,
-          46
-        ],
-        "label": "rata-rata tinggi genangan",
-        "value": "45 cm"
-      },
-      {
-        "data": [
-          10,
-          12,
-          14,
-          12,
-          15,
-          18,
-          18,
-          19
-        ],
-        "label": "warga terdampak banjir",
-        "value": "1.850"
-      }
-    ],
-    "reports": []
   }
 ];

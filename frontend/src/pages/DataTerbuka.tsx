@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react'
 import {
-  BadgeCheck,
   CheckCircle2,
   Clock,
   Database,
@@ -18,6 +17,7 @@ import {
 import { Accordion, Button, DataTag, StatusChip, cx, useToast } from '../components/ui'
 import { num, projects as defaultProjects, rupiahShort } from '../data'
 import type { Project } from '../data'
+import { useCountUp, useScrollReveal } from '../hooks/useAnimations'
 
 function save(name: string, mime: string, body: string) {
   const a = document.createElement('a')
@@ -61,6 +61,18 @@ export default function DataTerbuka({
     const onTimePct = total ? Math.round((onTimeCount / total) * 100) : 0
     return { totalCost, avgApbd, onTimePct, total, onTimeCount }
   }, [projects])
+
+  const countCostBillion = useCountUp(stats.totalCost / 1_000_000_000, 850, 120, true)
+  const countAvgApbd = Math.round(useCountUp(stats.avgApbd, 850, 200, true))
+  const countOnTimePct = Math.round(useCountUp(stats.onTimePct, 850, 280, true))
+  const formattedTotalCost = useMemo(() => {
+    if (stats.totalCost >= 1_000_000_000) {
+      return `Rp ${countCostBillion.toFixed(1).replace('.', ',')} miliar`
+    }
+    return rupiahShort(stats.totalCost)
+  }, [stats.totalCost, countCostBillion])
+
+  const kamusReveal = useScrollReveal<HTMLElement>()
 
   // Extract unique districts
   const districts = useMemo(() => {
@@ -126,16 +138,15 @@ export default function DataTerbuka({
   }
 
   return (
-    <div className="scroll-quiet min-h-0 flex-1 overflow-y-auto bg-canvas">
+    <div className="scroll-quiet min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
       <div className="mx-auto max-w-[1240px] px-4 py-8 md:px-8 md:py-12">
         {/* Header Section */}
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+        <div
+          className="animate-hero-enter flex flex-col justify-between gap-4 sm:flex-row sm:items-start"
+          style={{ animationDelay: '0ms' }}
+        >
           <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/25 bg-[#EAF2F1] px-3 py-1 text-xs font-bold text-brand">
-              <BadgeCheck size={14} aria-hidden />
-              <span>Open Government Data • Lisensi CC BY 4.0</span>
-            </span>
-            <h1 className="mt-3 text-[32px] font-extrabold leading-tight text-ink md:text-[42px]">
+            <h1 className="text-[32px] font-extrabold leading-tight text-ink md:text-[42px]">
               Dataset Terbuka PajakPeta
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-sub sm:text-base">
@@ -167,36 +178,45 @@ export default function DataTerbuka({
 
         {/* 3 Kartu Ringkasan Statistik Dataset */}
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl border border-line bg-surface p-5 shadow-card">
+          <div
+            className="animate-hero-enter rounded-2xl border border-line bg-surface p-5 shadow-card transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-brand/30"
+            style={{ animationDelay: '120ms' }}
+          >
             <div className="flex items-center justify-between text-sub">
               <span className="text-xs font-bold uppercase tracking-wider">Total Nilai Kontrak</span>
               <span className="flex size-8 items-center justify-center rounded-lg bg-canvas text-brand">
                 <Database size={16} />
               </span>
             </div>
-            <div className="mt-2 text-2xl font-extrabold text-ink sm:text-3xl">{rupiahShort(stats.totalCost)}</div>
+            <div className="mt-2 text-2xl font-extrabold text-ink sm:text-3xl">{formattedTotalCost}</div>
             <p className="mt-1 text-xs text-sub">Dari {stats.total} paket proyek fisik Kabupaten Sidoarjo</p>
           </div>
 
-          <div className="rounded-2xl border border-line bg-surface p-5 shadow-card">
+          <div
+            className="animate-hero-enter rounded-2xl border border-line bg-surface p-5 shadow-card transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-brand/30"
+            style={{ animationDelay: '200ms' }}
+          >
             <div className="flex items-center justify-between text-sub">
               <span className="text-xs font-bold uppercase tracking-wider">Rata-rata Porsi APBD</span>
               <span className="flex size-8 items-center justify-center rounded-lg bg-canvas text-[#1F8A5B]">
                 <Layers size={16} />
               </span>
             </div>
-            <div className="mt-2 text-2xl font-extrabold text-ink sm:text-3xl">{stats.avgApbd}%</div>
+            <div className="mt-2 text-2xl font-extrabold text-ink sm:text-3xl">{countAvgApbd}%</div>
             <p className="mt-1 text-xs text-sub">Berasal dari Pendapatan Asli Daerah (PAD kas lokal)</p>
           </div>
 
-          <div className="rounded-2xl border border-line bg-surface p-5 shadow-card">
+          <div
+            className="animate-hero-enter rounded-2xl border border-line bg-surface p-5 shadow-card transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-brand/30"
+            style={{ animationDelay: '280ms' }}
+          >
             <div className="flex items-center justify-between text-sub">
               <span className="text-xs font-bold uppercase tracking-wider">Kinerja Tepat Waktu</span>
               <span className="flex size-8 items-center justify-center rounded-lg bg-canvas text-[#D99A00]">
                 <Clock size={16} />
               </span>
             </div>
-            <div className="mt-2 text-2xl font-extrabold text-ink sm:text-3xl">{stats.onTimePct}%</div>
+            <div className="mt-2 text-2xl font-extrabold text-ink sm:text-3xl">{countOnTimePct}%</div>
             <p className="mt-1 text-xs text-sub">
               {stats.onTimeCount} dari {stats.total} proyek on-schedule tanpa keterlambatan
             </p>
@@ -234,7 +254,7 @@ export default function DataTerbuka({
                   onChange={(e) => setSelectedDistrict(e.target.value)}
                   className="h-10 w-full appearance-none rounded-xl border border-line bg-surface pl-3 pr-8 text-sm font-semibold text-ink focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 shadow-xs cursor-pointer"
                 >
-                  <option value="all">Semua Kecamatan ({projects.length})</option>
+                  <option value="all">Semua Kecamatan ({districts.length} Kecamatan)</option>
                   {districts.map((d) => (
                     <option key={d} value={d}>
                       Kec. {d}
@@ -263,7 +283,7 @@ export default function DataTerbuka({
                     (h, i) => (
                       <th
                         key={h}
-                        className={`sticky top-0 z-10 border-b border-line bg-canvas px-4 py-3 text-xs font-bold uppercase tracking-wider text-sub ${
+                        className={`sticky top-0 z-10 border-b border-line bg-canvas px-4 py-3 text-xs font-bold uppercase tracking-wider text-sub whitespace-nowrap ${
                           [4, 5, 6].includes(i) ? 'text-right' : 'text-left'
                         }`}
                       >
@@ -281,18 +301,22 @@ export default function DataTerbuka({
                     </td>
                   </tr>
                 ) : (
-                  filteredProjects.map((p) => {
+                  filteredProjects.map((p, idx) => {
                     const distName = p.loc.split(',')[0].replace('Kec. ', '').trim()
                     return (
-                      <tr key={p.id} className="group transition-colors hover:bg-canvas/60">
+                      <tr
+                        key={p.id}
+                        className="animate-card-enter group transition-colors hover:bg-brand/[0.03]"
+                        style={{ animationDelay: `${Math.min(idx * 25, 600)}ms` }}
+                      >
                         <td className="border-b border-line px-4 py-3 text-xs font-semibold text-sub">{p.id}</td>
                         <td className="border-b border-line px-4 py-3 font-semibold text-ink max-w-xs">{p.name}</td>
                         <td className="border-b border-line px-4 py-3 text-sub">{distName}</td>
-                        <td className="border-b border-line px-4 py-3">
+                        <td className="border-b border-line px-4 py-3 whitespace-nowrap">
                           <StatusChip status={p.status} cek={p.cek} size="sm" />
                         </td>
                         <td className="border-b border-line px-4 py-3 text-right font-bold text-ink">{p.progress}%</td>
-                        <td className="border-b border-line px-4 py-3 text-right font-semibold text-ink">
+                        <td className="border-b border-line px-4 py-3 text-right font-semibold text-ink whitespace-nowrap">
                           Rp {num(p.cost)}
                         </td>
                         <td className="border-b border-line px-4 py-3 text-right text-sub">{p.apbd}%</td>
@@ -308,7 +332,16 @@ export default function DataTerbuka({
         </section>
 
         {/* Section Kamus Data */}
-        <section className="mt-10 max-w-3xl" aria-label="Kamus data">
+        <section
+          ref={kamusReveal.ref}
+          className={cx(
+            'mt-10 max-w-3xl transition-all duration-700 ease-out',
+            kamusReveal.visible
+              ? 'opacity-100 translate-y-0 scale-100'
+              : 'opacity-0 translate-y-6 scale-[0.985]',
+          )}
+          aria-label="Kamus data"
+        >
           <h2 className="mb-2 text-xl font-bold text-ink">Kamus Metadata Dataset</h2>
           <p className="mb-4 text-xs text-sub">
             Penjelasan standar teknis dan tipe data untuk 9 atribut yang terdapat dalam file ekspor CSV & JSON.

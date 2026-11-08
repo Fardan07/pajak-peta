@@ -1,18 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { Search, X, ChevronDown, Check, Filter as FilterIcon, AlertTriangle, Layers } from 'lucide-react'
-import { STATUS_META, counts } from '../data'
-import type { Status } from '../data'
+import { CATEGORY_META, STATUS_META, counts } from '../data'
+import type { ProjectCategory, Status } from '../data'
 import { cx } from './ui'
 
 export type Filter = 'all' | Status | 'cek'
-
-const chips: { key: Filter; label: string; color?: string; n: number }[] = [
-  { key: 'all', label: 'Semua', n: counts.all },
-  { key: 'tepat', label: 'Tepat waktu', color: STATUS_META.tepat.color, n: counts.tepat },
-  { key: 'dekat', label: 'Waspada', color: STATUS_META.dekat.color, n: counts.dekat },
-  { key: 'telat', label: 'Terlambat', color: STATUS_META.telat.color, n: counts.telat },
-  { key: 'cek', label: 'Perlu Dicek', color: STATUS_META.telat.color, n: counts.cek },
-]
+export type CategoryFilter = 'all' | ProjectCategory
 
 export function SearchBox({ q, setQ, className = '' }: { q: string; setQ: (s: string) => void; className?: string }) {
   return (
@@ -23,12 +16,194 @@ export function SearchBox({ q, setQ, className = '' }: { q: string; setQ: (s: st
         onChange={(e) => setQ(e.target.value)}
         aria-label="Cari proyek atau jalan"
         placeholder="Cari proyek atau jalan..."
-        className="h-10 w-full rounded-xl border border-line bg-surface pl-9 pr-9 text-sm placeholder:text-[#7C8493] hover:border-[#D3CCBF] focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25"
+        className="h-10 w-full rounded-xl border border-line bg-surface pl-9 pr-9 text-sm placeholder:text-[#7C8493] hover:border-[#D3CCBF] focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25 transition-colors"
       />
       {q && (
-        <button onClick={() => setQ('')} aria-label="Hapus pencarian" className="absolute right-1 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-md text-sub hover:bg-canvas">
+        <button onClick={() => setQ('')} aria-label="Hapus pencarian" className="absolute right-1 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-md text-sub hover:bg-canvas active:scale-[0.98]">
           <X size={14} />
         </button>
+      )}
+    </div>
+  )
+}
+
+export function CategoryDropdown({
+  category,
+  setCategory,
+  categoryCounts,
+  totalCount,
+  className = '',
+}: {
+  category: CategoryFilter
+  setCategory: (c: CategoryFilter) => void
+  categoryCounts: Record<string, number>
+  totalCount: number
+  className?: string
+}) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  const items: {
+    key: CategoryFilter
+    label: string
+    shortLabel: string
+    icon?: string
+    n: number
+  }[] = [
+    {
+      key: 'all',
+      label: 'Semua Kategori',
+      shortLabel: 'Semua Kategori',
+      n: totalCount,
+    },
+    ...(Object.keys(CATEGORY_META) as ProjectCategory[])
+      .filter((k) => (categoryCounts[k] ?? 0) > 0)
+      .map((k) => ({
+        key: k as CategoryFilter,
+        label: CATEGORY_META[k].label,
+        shortLabel: CATEGORY_META[k].label.split(' ')[0],
+        icon: CATEGORY_META[k].icon,
+        n: categoryCounts[k] ?? 0,
+      })),
+  ]
+
+  const active = items.find((i) => i.key === category) ?? items[0]
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('keydown', handleKeyDown)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [open])
+
+  return (
+    <div ref={ref} className={cx('relative select-none', className)}>
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        className={cx(
+          'flex h-10 w-full sm:w-auto items-center justify-between gap-2 rounded-xl border px-3 text-sm font-bold transition-all duration-150 shadow-xs cursor-pointer active:scale-[0.98]',
+          open
+            ? 'border-brand bg-white ring-2 ring-brand/20 text-brand'
+            : category !== 'all'
+              ? 'border-brand/40 bg-brand/5 text-brand hover:border-brand hover:bg-brand/10'
+              : 'border-line bg-surface text-ink hover:border-[#D3CCBF] hover:bg-canvas'
+        )}
+      >
+        <div className="flex items-center gap-1.5 min-w-0">
+          {category === 'all' ? (
+            <FilterIcon size={14} className="text-sub shrink-0" />
+          ) : (
+            <span className="text-xs shrink-0">{active.icon}</span>
+          )}
+
+          <span className="truncate text-xs sm:text-sm font-bold">
+            {active.shortLabel}
+          </span>
+
+          <span
+            className={cx(
+              'inline-flex items-center justify-center rounded-full px-1.5 py-0.2 text-[11px] font-extrabold',
+              category !== 'all' ? 'bg-brand text-white' : 'bg-canvas text-sub'
+            )}
+          >
+            {active.n}
+          </span>
+        </div>
+
+        <ChevronDown
+          size={14}
+          className={cx(
+            'text-sub shrink-0 transition-transform duration-200 ml-0.5',
+            open && 'rotate-180 text-brand'
+          )}
+        />
+      </button>
+
+      {open && (
+        <div
+          role="listbox"
+          className="absolute left-0 top-full z-50 mt-1.5 w-64 sm:w-72 rounded-2xl border border-line bg-surface/98 p-1.5 shadow-xl backdrop-blur-md animate-fade-in"
+        >
+          <div className="flex items-center justify-between px-3 py-1.5 border-b border-line/60">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-sub">
+              Filter Kategori Proyek
+            </span>
+            {category !== 'all' && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setCategory('all')
+                  setOpen(false)
+                }}
+                className="text-[11px] font-bold text-brand hover:underline cursor-pointer"
+              >
+                Reset
+              </button>
+            )}
+          </div>
+
+          <div className="mt-1 space-y-0.5">
+            {items.map((item) => {
+              const isSelected = category === item.key
+              return (
+                <button
+                  key={item.key}
+                  type="button"
+                  role="option"
+                  aria-selected={isSelected}
+                  onClick={() => {
+                    setCategory(item.key)
+                    setOpen(false)
+                  }}
+                  className={cx(
+                    'flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2 text-left transition-colors cursor-pointer active:scale-[0.98]',
+                    isSelected
+                      ? 'bg-brand/10 text-brand font-bold'
+                      : 'hover:bg-canvas text-ink'
+                  )}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    {item.key === 'all' ? (
+                      <Layers size={14} className={isSelected ? 'text-brand' : 'text-sub'} />
+                    ) : (
+                      <span className="text-sm">{item.icon}</span>
+                    )}
+                    <span className="text-xs sm:text-sm font-semibold truncate">
+                      {item.label}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <span
+                      className={cx(
+                        'rounded-full px-2 py-0.5 text-xs font-extrabold',
+                        isSelected ? 'bg-brand text-white' : 'bg-canvas text-sub'
+                      )}
+                    >
+                      {item.n}
+                    </span>
+                    {isSelected && <Check size={14} className="text-brand shrink-0" />}
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+        </div>
       )}
     </div>
   )
@@ -60,8 +235,8 @@ export function FilterDropdown({
   }[] = [
     {
       key: 'all',
-      label: 'Semua Kategori',
-      shortLabel: 'Semua Kategori',
+      label: 'Semua Status',
+      shortLabel: 'Semua Status',
       desc: 'Seluruh paket proyek fisik daerah',
       n: currentCounts.all,
     },
@@ -129,12 +304,12 @@ export function FilterDropdown({
         aria-expanded={open}
         aria-haspopup="listbox"
         className={cx(
-          'flex h-10 w-full sm:w-auto items-center justify-between gap-2.5 rounded-xl border px-3.5 text-sm font-bold transition-all duration-150 shadow-xs cursor-pointer',
+          'flex h-10 w-full sm:w-auto items-center justify-between gap-2.5 rounded-xl border px-3.5 text-sm font-bold transition-all duration-150 shadow-xs cursor-pointer active:scale-[0.98]',
           open
             ? 'border-brand bg-white ring-2 ring-brand/20 text-brand'
             : filter !== 'all'
-            ? 'border-brand/40 bg-brand/5 text-brand hover:border-brand hover:bg-brand/10'
-            : 'border-line bg-surface text-ink hover:border-[#D3CCBF] hover:bg-canvas'
+              ? 'border-brand/40 bg-brand/5 text-brand hover:border-brand hover:bg-brand/10'
+              : 'border-line bg-surface text-ink hover:border-[#D3CCBF] hover:bg-canvas'
         )}
       >
         <div className="flex items-center gap-2 min-w-0">
@@ -177,25 +352,6 @@ export function FilterDropdown({
           role="listbox"
           className="absolute left-0 top-full z-50 mt-1.5 w-72 sm:w-80 rounded-2xl border border-line bg-surface/98 p-1.5 shadow-xl backdrop-blur-md animate-fade-in"
         >
-          <div className="flex items-center justify-between px-3 py-2 border-b border-line/60">
-            <span className="text-[10px] font-extrabold uppercase tracking-wider text-sub">
-              Pilih Kategori Proyek
-            </span>
-            {filter !== 'all' && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setFilter('all')
-                  setOpen(false)
-                }}
-                className="text-[11px] font-bold text-brand hover:underline cursor-pointer"
-              >
-                Reset Filter
-              </button>
-            )}
-          </div>
-
           <div className="mt-1 space-y-1">
             {items.map((item) => {
               const isSelected = filter === item.key
@@ -210,51 +366,14 @@ export function FilterDropdown({
                     setOpen(false)
                   }}
                   className={cx(
-                    'flex w-full items-center justify-between gap-2.5 rounded-xl px-3 py-2 text-left transition-colors cursor-pointer',
+                    'flex w-full items-center justify-between gap-2.5 rounded-xl px-3 py-2 text-left transition-colors cursor-pointer active:scale-[0.98]',
                     isSelected
                       ? 'bg-brand/10 text-brand font-bold'
                       : 'hover:bg-canvas text-ink'
                   )}
                 >
-                  <div className="flex items-start gap-2.5 min-w-0">
-                    <div className="pt-0.5 shrink-0">
-                      {item.key === 'all' ? (
-                        <Layers
-                          size={15}
-                          className={isSelected ? 'text-brand' : 'text-sub'}
-                        />
-                      ) : item.isAlert ? (
-                        <AlertTriangle size={15} className="text-bad" />
-                      ) : (
-                        <span
-                          className="block size-2.5 rounded-full mt-1"
-                          style={{ backgroundColor: item.color }}
-                        />
-                      )}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-xs sm:text-sm font-bold truncate">
-                        {item.label}
-                      </div>
-                      <p className="text-[11px] text-sub leading-tight mt-0.5 line-clamp-1">
-                        {item.desc}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span
-                      className={cx(
-                        'rounded-full px-2 py-0.5 text-xs font-extrabold',
-                        isSelected ? 'bg-brand text-white' : 'bg-canvas text-sub'
-                      )}
-                    >
-                      {item.n}
-                    </span>
-                    {isSelected && (
-                      <Check size={14} className="text-brand shrink-0" />
-                    )}
-                  </div>
+                  <span className="text-xs sm:text-sm font-bold truncate">{item.label}</span>
+                  <span className="rounded-full px-2 py-0.5 text-xs font-extrabold bg-canvas text-sub">{item.n}</span>
                 </button>
               )
             })}
@@ -279,33 +398,35 @@ export function FilterChips({
   const currentCounts = dynamicCounts ?? counts
   const items: { key: Filter; label: string; color?: string; n: number }[] = [
     { key: 'all', label: 'Semua', n: currentCounts.all },
-    { key: 'tepat', label: 'Tepat waktu', color: STATUS_META.tepat.color, n: currentCounts.tepat },
+    { key: 'tepat', label: 'Tepat Waktu', color: STATUS_META.tepat.color, n: currentCounts.tepat },
     { key: 'dekat', label: 'Waspada', color: STATUS_META.dekat.color, n: currentCounts.dekat },
     { key: 'telat', label: 'Terlambat', color: STATUS_META.telat.color, n: currentCounts.telat },
     { key: 'cek', label: 'Perlu Dicek', color: STATUS_META.telat.color, n: currentCounts.cek },
   ]
 
   return (
-    <div role="radiogroup" aria-label="Filter status" className={cx('flex items-center gap-1.5', className)}>
+    <div role="radiogroup" aria-label="Filter status proyek" className={cx('flex items-center gap-1 overflow-x-auto scroll-quiet', className)}>
       {items.map((c) => {
         const on = filter === c.key
         const dashed = c.key === 'cek'
         return (
           <button
             key={c.key}
+            type="button"
             role="radio"
             aria-checked={on}
             onClick={() => setFilter(c.key)}
             className={cx(
-              'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-xs md:text-sm font-medium transition-colors duration-150',
+              'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl border px-2.5 text-xs font-bold transition-all duration-150 cursor-pointer active:scale-[0.98]',
               dashed && 'border-dashed',
-              on ? 'border-brand bg-brand text-white shadow-sm' : 'border-line bg-surface text-ink hover:border-[#D3CCBF] hover:bg-canvas',
-              dashed && !on && 'border-bad text-bad',
+              on ? 'border-brand bg-brand text-white shadow-xs' : 'border-line bg-surface text-ink hover:border-[#D3CCBF] hover:bg-canvas',
+              dashed && !on && 'border-bad/70 text-bad hover:bg-[#FDEEEB]/50',
             )}
           >
-            {c.color && !dashed && <span className="size-2 rounded-full" style={{ background: c.color, boxShadow: on ? '0 0 0 1.5px #fff' : undefined }} />}
-            {c.label}
-            <span className={cx('text-xs font-semibold', on ? 'text-white/80' : 'text-sub')}>{c.n}</span>
+            {c.color && !dashed && <span className="size-2 rounded-full shrink-0" style={{ background: c.color, boxShadow: on ? '0 0 0 1.5px #fff' : undefined }} />}
+            {dashed && <AlertTriangle size={12} className="shrink-0" />}
+            <span>{c.label}</span>
+            <span className={cx('text-[11px] font-extrabold', on ? 'text-white/85' : 'text-sub')}>{c.n}</span>
           </button>
         )
       })}

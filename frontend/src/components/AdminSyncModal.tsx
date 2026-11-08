@@ -9,7 +9,7 @@ import {
   Lock,
   MapPin,
   RefreshCw,
-  Sparkles,
+  RotateCcw,
   Trash2,
   Unlock,
   UploadCloud,
@@ -25,6 +25,7 @@ export interface AdminSyncModalProps {
   existingProjects: Project[]
   onSyncSuccess: (updatedProjects: Project[], firstSyncedId: string) => void
   onViewInMap: (id: string) => void
+  onResetDemo?: () => void
 }
 
 interface StagedItem {
@@ -148,6 +149,7 @@ export default function AdminSyncModal({
   existingProjects,
   onSyncSuccess,
   onViewInMap,
+  onResetDemo,
 }: AdminSyncModalProps) {
   const toast = useToast()
   const [pin, setPin] = useState('')
@@ -535,7 +537,7 @@ export default function AdminSyncModal({
         role="dialog"
         aria-modal="true"
         aria-label="Portal Sinkronisasi Data Dinas"
-        className="relative flex max-h-[92vh] w-full max-w-4xl flex-col rounded-3xl border border-line bg-surface shadow-2xl overflow-hidden"
+        className="animate-modal-pop relative flex max-h-[92vh] w-full max-w-4xl flex-col rounded-3xl border border-line bg-surface shadow-2xl overflow-hidden"
       >
         {/* Header Bar */}
         <div className="flex items-center justify-between border-b border-line px-6 py-4 bg-canvas/60">
@@ -584,21 +586,18 @@ export default function AdminSyncModal({
 
               {/* Instant Demo Button for Jury */}
               <div className="rounded-2xl border border-brand/30 bg-brand/5 p-4 text-left space-y-3">
-                <div className="flex items-start gap-2.5">
-                  <Sparkles size={18} className="text-brand shrink-0 mt-0.5" />
-                  <div>
+                <div className="space-y-1">
                     <h4 className="text-sm font-bold text-ink">Mode Pengujian Juri Kompetisi</h4>
                     <p className="text-xs text-sub">
                       Klik tombol instan di bawah ini untuk melewati gerbang otorisasi tanpa perlu mengetik manual.
                     </p>
-                  </div>
                 </div>
                 <Button
                   onClick={handleInstantDemoLogin}
                   className="w-full justify-center shadow-md font-bold bg-brand hover:bg-brand/90 text-white"
                   icon={<Unlock size={16} />}
                 >
-                  ⚡ Masuk Instan (Mode Demo Juri)
+                  Masuk Instan (Mode Demo Juri)
                 </Button>
               </div>
 
@@ -675,7 +674,7 @@ export default function AdminSyncModal({
                   className="flex items-start gap-3 rounded-2xl border border-brand/30 bg-brand/5 p-4 text-left transition-all hover:bg-brand/10 hover:shadow-sm"
                 >
                   <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand text-white shadow-xs">
-                    <Sparkles size={20} />
+                    <UploadCloud size={20} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
@@ -789,7 +788,7 @@ export default function AdminSyncModal({
                                   </span>
                                 ) : (
                                   <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/10 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
-                                    <Sparkles size={11} /> + BARU
+                                    + BARU
                                   </span>
                                 )}
                               </td>
@@ -810,7 +809,7 @@ export default function AdminSyncModal({
                                 </span>
                                 {!item.isUpdate && (
                                   <span className="block text-[10px] text-brand font-semibold">
-                                    📍 Auto-Geocoded
+                                    Auto-Geocoded
                                   </span>
                                 )}
                               </td>
@@ -891,7 +890,7 @@ export default function AdminSyncModal({
                       className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md"
                       icon={<ArrowRight size={16} />}
                     >
-                      🗺️ Lihat Proyek Baru di Peta (Auto Pan &amp; Zoom)
+                      Lihat Proyek Baru di Peta (Auto Pan &amp; Zoom)
                     </Button>
                     <Button variant="secondary" onClick={onClose}>
                       Selesai
@@ -904,11 +903,31 @@ export default function AdminSyncModal({
         </div>
 
         {/* Modal Footer */}
-        {isAuthorized && stagedList.length > 0 && !syncResult && (
-          <div className="flex items-center justify-between border-t border-line px-6 py-4 bg-canvas/60">
-            <div className="text-xs text-sub">
-              Siap mempublikasikan <b>{stagedList.length} proyek</b> ke seluruh peta publik.
-            </div>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-6 py-3.5 bg-canvas/60">
+          <div className="flex items-center gap-3">
+            {onResetDemo && (
+              <button
+                type="button"
+                onClick={() => {
+                  setStagedList([])
+                  setSyncResult(null)
+                  onResetDemo()
+                }}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface px-2.5 py-1.5 text-xs font-semibold text-sub hover:border-brand/40 hover:text-brand transition-all active:scale-[0.98] cursor-pointer"
+                title="Hapus cache localStorage dan kembalikan ke 24 proyek awal"
+              >
+                <RotateCcw size={13} />
+                <span>Reset Data Demo (24 Proyek)</span>
+              </button>
+            )}
+            {isAuthorized && stagedList.length > 0 && !syncResult && (
+              <span className="text-xs text-sub">
+                Siap mempublikasikan <b>{stagedList.length} proyek</b> ke seluruh peta publik.
+              </span>
+            )}
+          </div>
+
+          {isAuthorized && stagedList.length > 0 && !syncResult ? (
             <div className="flex items-center gap-2.5">
               <Button variant="secondary" onClick={onClose}>
                 Batal
@@ -922,8 +941,12 @@ export default function AdminSyncModal({
                 {isSubmitting ? 'Menerapkan...' : 'Terapkan & Publikasikan ke Peta Sekarang'}
               </Button>
             </div>
-          </div>
-        )}
+          ) : (
+            <span className="text-[11px] text-sub">
+              Total aktif saat ini: <b>{existingProjects.length} proyek</b>
+            </span>
+          )}
+        </div>
       </div>
     </div>
   )

@@ -137,14 +137,14 @@ export default function CekLapangan({
 
   return (
     <div
-      className="fixed inset-0 z-[1000] flex items-end justify-center bg-ink/45 animate-fade-in sm:items-center sm:p-6"
+      className="fixed inset-0 z-[1000] flex items-end justify-center bg-ink/45 backdrop-blur-xs animate-fade-in sm:items-center sm:p-6"
       onMouseDown={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="cek-title"
-        className="scroll-quiet max-h-[94dvh] w-full overflow-y-auto rounded-t-2xl bg-surface shadow-card animate-sheet-up sm:max-w-[600px] sm:rounded-2xl"
+        className="scroll-quiet max-h-[94dvh] w-full overflow-y-auto rounded-t-2xl bg-surface shadow-card animate-sheet-up sm:animate-modal-pop sm:max-w-[600px] sm:rounded-2xl"
       >
         <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-line sm:hidden" />
         <div className="flex items-start justify-between gap-4 px-5 pt-4 sm:px-8 sm:pt-7">

@@ -6,9 +6,9 @@ import {
   Info,
   Layers,
 } from "lucide-react"
-import { STATUS_META, projects } from "../data"
-import { FilterDropdown, SearchBox } from "./MapControls"
-import type { Filter } from "./MapControls"
+import { STATUS_META, getProjectCategory, projects } from "../data"
+import { CategoryDropdown, SearchBox } from "./MapControls"
+import type { CategoryFilter, Filter } from "./MapControls"
 import type { Project } from "../data"
 import GoogleMapLayer from "./GoogleMapLayer"
 import LeafletLayer from "./LeafletLayer"
@@ -47,6 +47,7 @@ export default function MapPage({
   const [panel, setPanel] = useState(false)
   const [legendOpen, setLegendOpen] = useState(true)
   const [showBoundaries, setShowBoundaries] = useState(true)
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all")
   const [mapErr, setMapErr] = useState("")
   const live = !!apiKey && !mapErr
   const selected = allProjects.find((p) => p.id === selectedId) ?? null
@@ -56,22 +57,22 @@ export default function MapPage({
       allProjects.filter((p) => {
         const f =
           filter === "all" || (filter === "cek" ? p.cek : p.status === filter)
+        const cat = p.category ?? getProjectCategory(p.name)
+        const c = categoryFilter === "all" || cat === categoryFilter
         const s = !q || (p.name + p.loc).toLowerCase().includes(q.toLowerCase())
-        return f && s
+        return f && c && s
       }),
-    [filter, q, allProjects],
+    [filter, categoryFilter, q, allProjects],
   )
 
-  const projectCounts = useMemo(
-    () => ({
-      all: allProjects.length,
-      tepat: allProjects.filter((p) => p.status === "tepat").length,
-      dekat: allProjects.filter((p) => p.status === "dekat").length,
-      telat: allProjects.filter((p) => p.status === "telat").length,
-      cek: allProjects.filter((p) => p.cek).length,
-    }),
-    [allProjects],
-  )
+  const categoryCounts = useMemo(() => {
+    const map: Record<string, number> = {}
+    allProjects.forEach((p) => {
+      const cat = p.category ?? getProjectCategory(p.name)
+      map[cat] = (map[cat] ?? 0) + 1
+    })
+    return map
+  }, [allProjects])
 
   /* mobile sheet */
   const [snap, setSnap] = useState(0)
@@ -146,19 +147,20 @@ export default function MapPage({
 
         {/* Floating Control Bar (Glassmorphism) */}
         <div
-          className="pointer-events-auto absolute left-3 top-3 z-30 flex max-w-[calc(100vw-24px)] flex-col gap-2 rounded-2xl border border-line bg-surface/95 p-2 shadow-card backdrop-blur-md md:left-4 md:top-4"
-          style={{ zIndex: 30 }}
+          className="animate-card-enter pointer-events-auto absolute left-3 top-3 z-30 flex max-w-[calc(100%-24px)] flex-col gap-2 rounded-2xl border border-line bg-surface/95 p-2 shadow-card backdrop-blur-md md:left-4 md:top-4"
+          style={{ zIndex: 30, animationDelay: "60ms" }}
         >
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
             <SearchBox
               q={q}
               setQ={setQ}
-              className="w-full sm:w-60 md:w-64 shrink-0"
+              className="w-full sm:w-52 md:w-56 shrink-0"
             />
-            <FilterDropdown
-              filter={filter}
-              setFilter={setFilter}
-              counts={projectCounts}
+            <CategoryDropdown
+              category={categoryFilter}
+              setCategory={setCategoryFilter}
+              categoryCounts={categoryCounts}
+              totalCount={allProjects.length}
             />
           </div>
           {list.length === 0 && (
@@ -171,8 +173,9 @@ export default function MapPage({
                 onClick={() => {
                   setQ("")
                   setFilter("all")
+                  setCategoryFilter("all")
                 }}
-                className="shrink-0 rounded-lg bg-white px-2.5 py-1 font-bold text-ink shadow-xs hover:bg-canvas cursor-pointer"
+                className="shrink-0 rounded-lg bg-white px-2.5 py-1 font-bold text-ink shadow-xs hover:bg-canvas active:scale-[0.98] cursor-pointer"
               >
                 Reset
               </button>
@@ -254,8 +257,8 @@ export default function MapPage({
 
         {/* legend */}
         <div
-          className="absolute bottom-4 left-4 z-30 hidden md:block"
-          style={{ zIndex: 30 }}
+          className="animate-card-enter absolute bottom-4 left-4 z-30 hidden md:block"
+          style={{ zIndex: 30, animationDelay: "140ms" }}
         >
           {legendOpen ? (
             <div className="rounded-xl border border-line bg-surface/95 p-3.5 shadow-card backdrop-blur-md transition-all">

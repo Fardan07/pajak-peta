@@ -66,6 +66,18 @@ function Shell() {
     setPage('bandingkan')
   }
 
+  const handleResetDemoData = () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem('pajakpeta_projects_v2')
+    } catch {
+      // Ignore storage errors
+    }
+    setProjectList(initialProjects)
+    setSelectedId('p1')
+    toast('Data demo berhasil direset ke 24 proyek awal!')
+  }
+
   // Live state initialized with saved/static projects as zero-latency fallback
   const [projectList, setProjectList] = useState<Project[]>(loadSavedProjects)
 
@@ -132,7 +144,7 @@ function Shell() {
   }
 
   return (
-    <div className="flex h-dvh flex-col bg-canvas text-ink">
+    <div className="flex h-dvh flex-col bg-arch-grid text-ink">
       <header className="z-30 flex h-14 shrink-0 items-center justify-between border-b border-line bg-surface px-4 md:h-16 md:px-6">
         <button
           onClick={() => setPage('beranda')}
@@ -178,7 +190,8 @@ function Shell() {
         </div>
       </header>
 
-      {page === 'beranda' && (
+      <main key={page} className="animate-page-enter flex min-h-0 flex-1 flex-col overflow-hidden">
+        {page === 'beranda' && (
         <Beranda
           projects={projectList}
           onExploreMap={() => setPage('peta')}
@@ -241,7 +254,8 @@ function Shell() {
           onOpenAdminSync={() => setAdminModalOpen(true)}
         />
       )}
-      {page === 'komponen' && <Komponen />}
+        {page === 'komponen' && <Komponen />}
+      </main>
 
       {/* Mobile Bottom Navigation */}
       <nav className="grid h-16 shrink-0 grid-cols-5 border-t border-line bg-surface md:hidden" aria-label="Tab utama">
@@ -275,6 +289,7 @@ function Shell() {
           setProjectList(updated)
           saveProjectsToStorage(updated)
         }}
+        onResetDemo={handleResetDemoData}
         onViewInMap={(targetId) => {
           setFilter('all')
           setQ('')
